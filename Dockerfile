@@ -1,4 +1,4 @@
 FROM openjdk:17
-COPY ./target/classes/com /tmp/com
+COPY ./target/sem_assessment-0.1.0.1-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "com.napier.sem.populationApp"]
+ENTRYPOINT ["java", "-jar", "sem_assessment-0.1.0.1-jar-with-dependencies.jar"]
