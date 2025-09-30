@@ -48,7 +48,7 @@ Deployment working.
 
 Bug reporting system set-up.
 
-Designs documents for GUI (Wirefame).
+Designs documents for GUI (Wireframe).
 
 Construct GUI for the front end.
 
