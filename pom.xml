@@ -1,50 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Declares this file as an XML document with UTF-8 encoding -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- Root element for a Maven project descriptor (POM) -->
+    <!-- Defines the XML namespace and schema for validation -->
+
     <modelVersion>4.0.0</modelVersion>
+    <!-- Specifies the POM model version -->
 
     <groupId>com.napier.sem</groupId>
+    <!-- Logical group identifier for the project (package name) -->
+
     <artifactId>sem_assessment</artifactId>
+    <!-- Unique name for the artifact (project name) -->
+
     <version>0.1.0.2</version>
+    <!-- Project version number -->
 
     <dependencies>
+        <!-- List of external libraries the project depends on -->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
             <version>3.6.4</version>
         </dependency>
+        <!-- Adds MongoDB Java driver version 3.6.4 as a dependency -->
     </dependencies>
 
     <properties>
+        <!-- Project-wide configuration properties -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <!-- Specifies Java version 17 for compiling and targeting -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Ensures UTF-8 encoding for source files -->
     </properties>
 
     <build>
+        <!-- Configuration for the build process -->
         <plugins>
+            <!-- List of Maven plugins used during the build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
+                <!-- Plugin to create a bundled JAR with dependencies -->
+
                 <configuration>
                     <archive>
                         <manifest>
                             <mainClass>com.napier.sem.populationApp</mainClass>
                         </manifest>
                     </archive>
+                    <!-- Specifies the entry point (main class) for the JAR -->
+
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <!-- Tells Maven to include all dependencies in the JAR -->
                 </configuration>
+
                 <executions>
+                    <!-- Defines when and how the plugin should run -->
                     <execution>
                         <id>make-assembly</id>
+                        <!-- Unique ID for this execution block -->
+
                         <phase>package</phase>
+                        <!-- Runs this plugin during the 'package' phase -->
+
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <!-- Uses the 'single' goal to create one bundled JAR -->
                     </execution>
                 </executions>
             </plugin>
