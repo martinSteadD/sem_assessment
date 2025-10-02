@@ -48,21 +48,51 @@ Deployment working.
 
 Bug reporting system set-up.
 
-Designs documents for GUI (Wireframe).
+Designs documents for GUI (Wirefame). 
 
-Construct GUI for the front end.
+Construct GUI for the front end. 
 
-Implement report generation
+Implement report generation 
 
-Functions for implementation -
+Implement SQL database 
 
-Population report (Largest to smallest)
+Functionality for implementation - 
 
-Countries
+Population report (Largest to smallest) 
 
-Cities
+  World 
 
-Display report with set number of records
+  Continent 
+
+  Region 
+
+  Countries 
+
+  District 
+
+  City 
+
+Display report with user defined number of records sorted by population (Ascending) 
+
+Display capital cities within - (Sorted by population) 
+
+  World 
+
+  Continent 
+
+  Region 
+
+Display capital cities with user defined number of records sorted by population (Ascending) 
+
+  World 
+
+  Continent  
+
+  Region 
+
+Produce report on languages spoken by each country 
+
+Produce a working project. 
 
 
 
