@@ -1,10 +1,10 @@
-# USE CASE: 4 Produce a Report on the Salary of Employees of a Given Role
+# USE CASE: Generate Cities Report
 
 ## CHARACTERISTIC INFORMATION
 
 ### Goal in Context
 
-As the Manager for the News Agency, I want a program to show me the top 10 populated countries in an area of my choosing so that I can identify better locations for our office.
+As a Journalist, I want to identify the most populated cities so that I can plan my next travel destination.
 
 ### Scope
 
@@ -12,7 +12,7 @@ Company.
 
 ### Level
 
-Secondary task.
+Primary task.
 
 ### Preconditions
 
@@ -28,11 +28,11 @@ No report is produced.
 
 ### Primary Actor
 
-News Manager.
+Journalist.
 
 ### Trigger
 
-Manager is looking for new office location in a populated area
+Journalist needs to choose a destination for travel
 
 ## MAIN SUCCESS SCENARIO
 
@@ -50,7 +50,11 @@ Manager is looking for new office location in a populated area
 
 ## SUB-VARIATIONS
 
-None.
+1. User generates report for all cities in the world.
+2. User generates report for all cities in the continent.
+3. User generates report for all cities in the region.
+4. User generates report for all cities in the country.
+5. User generates report for all cities in the district.
 
 ## SCHEDULE
 

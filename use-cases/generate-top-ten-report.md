@@ -1,4 +1,4 @@
-# USE CASE: 4 Produce a Report on the Salary of Employees of a Given Role
+# USE CASE: Generate Top 10 Population in an Area
 
 ## CHARACTERISTIC INFORMATION
 
@@ -50,7 +50,17 @@ Manager is looking for new office location in a populated area
 
 ## SUB-VARIATIONS
 
-None.
+1. User generates report for top 10 populated countries in the world.
+2. User generates report for top 10 populated countries in the continent.
+3. User generates report for top 10 populated countries in the region.
+4. User generates report for top 10 populated cities in the world.
+5. User generates report for top 10 populated cities in the continent.
+6. User generates report for top 10 populated cities in the region.
+7. User generates report for top 10 populated cities in the country.
+8. User generates report for top 10 populated cities in the district.
+9. User generates report for top 10 populated capital cities in the world.
+10. User generates report for top 10 populated capital cities in the continent.
+11. User generates report for top 10 populated capital cities in the region.
 
 ## SCHEDULE
 

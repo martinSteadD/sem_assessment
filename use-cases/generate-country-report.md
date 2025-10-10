@@ -50,7 +50,9 @@ Manager request a story from the news writer
 
 ## SUB-VARIATIONS
 
-None.
+1. User generates report for all countries in the world.
+2. User generates report for all countries in the continent.
+3. User generates report for all countries in the region.
 
 ## SCHEDULE
 
