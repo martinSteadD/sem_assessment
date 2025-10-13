@@ -26,7 +26,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
-        <!-- Adds MySQL Java connector version 8.0.33 as a dependency -->
+        <!-- Adds MySQL Java connector version 8.0.33 as a dependency (replaced mongoDB) -->
     </dependencies>
 
     <properties>
