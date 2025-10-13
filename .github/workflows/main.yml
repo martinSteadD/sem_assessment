@@ -25,13 +25,7 @@ jobs:
           java-version: '17'         # Specifies the Java version
           distribution: 'adopt'      # Uses AdoptOpenJDK distribution
 
-      # Step 3: Creates a Docker network and starts a MongoDB container
-      - name: Setup network
-        run: |
-          docker network create --driver bridge sem_assessment
-          docker pull mongo
-          docker run -d --name mongo-dbserver --network sem_assessment mongo
-        # This sets up a bridge network and runs MongoDB in a container named mongo-dbserver
+
 
       # Step 4: Compiles and packages the Java app using Maven
       - name: Package with Maven
@@ -43,13 +37,14 @@ jobs:
         run: docker build -t sem_assessment .
         # Builds the Docker image using the Dockerfile in the repo
 
-      # Step 6: Runs the Docker image and connect it to the MongoDB container
-      - name: Run image
-        run: docker run --network sem_assessment --name sem_assessmentcontainer sem_assessment
-        # Runs the app container and links it to the MongoDB container via the shared network
+        #Step 6 Package and run docker compose
+      - name: Package and Run docker compose
+        run: |
+          mvn package -DskipTests
+          docker compose up --abort-on-container-exit
 
       # Step 7: Outputs logs from the running container
       - name: View logs
-        run: docker logs sem_assessmentcontainer
+        run: docker logs sem_assessment-app-1
         # Displays the container logs for debugging or verification
 
