@@ -22,11 +22,11 @@
     <dependencies>
         <!-- List of external libraries the project depends on -->
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver</artifactId>
-            <version>3.6.4</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
-        <!-- Adds MongoDB Java driver version 3.6.4 as a dependency -->
+        <!-- Adds MySQL Java connector version 8.0.33 as a dependency -->
     </dependencies>
 
     <properties>
