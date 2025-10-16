@@ -20,7 +20,13 @@ Database connection established.
 
 ### Success End Condition
 
-A report is available for the user to view.
+A report is available for the user to view with the fields:
+- Code
+- Name
+- Continent
+- Region
+- Population
+- Capital
 
 ### Failed End Condition
 
