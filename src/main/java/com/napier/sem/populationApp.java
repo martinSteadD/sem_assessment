@@ -1,7 +1,9 @@
 package com.napier.sem;
 
 import java.sql.*;
-
+/*
+* This app will connect to the mySQL database and then allow user to retrieve information on the world population
+ */
 public class populationApp
 {
     public static void main(String[] args)
@@ -37,7 +39,7 @@ public class populationApp
             }
             catch (SQLException sqle)
             {
-                System.out.println("Failed to connect to database attempt " + Integer.toString(i));
+                System.out.println("Failed to connect to database attempt " + i);
                 System.out.println(sqle.getMessage());
             }
             catch (InterruptedException ie)
