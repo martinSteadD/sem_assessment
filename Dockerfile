@@ -12,4 +12,3 @@ WORKDIR /tmp
 # Defines the default command to run when the container starts
 ENTRYPOINT ["java", "-jar", "sem_assessment-0.1.0.4-jar-with-dependencies.jar"]
 # This launches the Java application using the bundled JAR
-
