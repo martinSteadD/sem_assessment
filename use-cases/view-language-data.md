@@ -20,7 +20,13 @@ Database connection established.
 
 ### Success End Condition
 
-User is able to view the data on languages in the world.
+User is able to view the data on languages in the world including;
+- Chinese
+- English
+- Hindi
+- Spanish
+- Arabic
+  (Include percentages of total world population)
 
 ### Failed End Condition
 

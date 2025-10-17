@@ -20,7 +20,13 @@ Database connection established.
 
 ### Success End Condition
 
-A report is available for the user to view.
+A report is available for the user to view with the fields:
+- Name
+- Total Population
+- Population living in cities
+- %in cities
+- Population Not living in cities
+- %out cities
 
 ### Failed End Condition
 
