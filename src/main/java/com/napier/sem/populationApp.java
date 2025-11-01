@@ -125,4 +125,90 @@ public class populationApp
                     c.code, c.name, c.continent, c.region, c.population, c.capital);
         }
     }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<cityReport> getAllCityByPopulation() {
+        ArrayList<cityReport> cities = new ArrayList<>();
+    return cities;
+    }
+
+    /**
+     *
+     * @param cities
+     */
+    public void printCityReport(ArrayList<cityReport> cities) {
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() {
+        ArrayList<capitalCityReport> capitalCities = new ArrayList<>();
+        return capitalCities;
+    }
+
+    /**
+     *
+     * @param cities
+     */
+    public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<populationReport> getAllPopulation() {
+        ArrayList<populationReport> population = new ArrayList<>();
+        return population;
+    }
+
+    /**
+     *
+     * @param population
+     */
+    public void printPopulationReport(ArrayList<populationReport> population) {
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<populationSummary> getAllPopulationSummary() {
+        ArrayList<populationSummary> summary = new ArrayList<>();
+        return summary;
+    }
+
+    /**
+     *
+     * @param summary
+     */
+    public void printPopulationSummary(ArrayList<populationSummary> summary) {
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<languageReport> getAllLanguageByPopulation() {
+        ArrayList<languageReport> languages = new ArrayList<>();
+        return languages;
+    }
+
+    /**
+     *
+     * @param languages
+     */
+    public void printLanguageReport(ArrayList<languageReport> languages) {
+
+    }
+
 }
