@@ -65,7 +65,7 @@ jobs:
 
         # Step 5: Run Integration Tests
         - name: Integration Tests
-          run: mvn -Dtest=com.napier.sem.populationAppIntegrationTest test
+          run: mvn -Dtest=com.napier.sem.PopulationAppIntegrationTest test
           # Executes database-dependent tests
 
         # Step 6: Stop and remove container after tests
