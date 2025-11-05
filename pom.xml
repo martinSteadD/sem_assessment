@@ -27,6 +27,17 @@
             <version>8.0.33</version>
         </dependency>
         <!-- Adds MySQL Java connector version 8.0.33 as a dependency (replaced mongoDB) -->
+
+        <!-- JUnit 5 (Jupiter API + Engine) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
     </dependencies>
 
     <properties>
@@ -36,6 +47,8 @@
         <!-- Specifies Java version 17 for compiling and targeting -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Ensures UTF-8 encoding for source files -->
+        <junit.jupiter.version>5.1.0</junit.jupiter.version>
+        <!-- JUnit version 5 -->
     </properties>
 
     <build>
@@ -77,6 +90,19 @@
                         <!-- Uses the 'single' goal to create one bundled JAR -->
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- JUnit Automatic Test Runner -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <useModulePath>false</useModulePath>
+                </configuration>
             </plugin>
         </plugins>
     </build>
