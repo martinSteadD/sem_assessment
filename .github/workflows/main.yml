@@ -35,7 +35,7 @@ jobs:
     # -----------------------
     # Integration Tests Job
     # -----------------------
-    IntegrationTests:
+  IntegrationTests:
       name: Run Integration Tests
       runs-on: ubuntu-22.04
 
