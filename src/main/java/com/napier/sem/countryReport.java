@@ -1,35 +1,42 @@
 package com.napier.sem;
 
+/**
+ * The countryReport class represents a data model for reporting
+ * information about a country, including its code, name, continent, region,
+ * population, and capital city.
+ * <p>
+ * This class is used to structure country-related data for reporting purposes.
+ */
 public class countryReport {
 
     /**
-     * Country Code
+     * The ISO code representing the country.
      */
     public String code;
 
     /**
-     * Country Name
+     * The name of the country.
      */
     public String name;
 
     /**
-     * Continent
+     * The continent on which the country is located.
      */
     public String continent;
 
     /**
-     * Region in the Country
+     * The region within the continent where the country is situated.
      */
     public String region;
 
     /**
-     * Country Population
+     * The total population of the country.
      */
     public int population;
 
     /**
-     * Capital City in the Country
+     * The capital city of the country.
      */
     public String capital;
-
 }
+
