@@ -5,6 +5,85 @@ name: A workflow for the Population App
 on: push
 
 jobs:
+
+  # -----------------------
+  # Unit Tests Job
+  # -----------------------
+  UnitTests:
+    name: Run Unit Tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Step 2: Set up Java JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      # Step 3: Run Unit Tests using Maven
+      - name: Unit Tests
+        run: mvn -Dtest=com.napier.sem.SimpleUnitTest test
+        # Executes the unit test file SimpleUnitTest.java
+
+    # -----------------------
+    # Integration Tests Job
+    # -----------------------
+  IntegrationTests:
+      name: Run Integration Tests
+      runs-on: ubuntu-22.04
+
+      steps:
+        # Step 1: Checkout repository
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            submodules: recursive
+
+        # Step 2: Set up Java JDK 17
+        - name: Set up JDK 17
+          uses: actions/setup-java@v2
+          with:
+            java-version: '17'
+            distribution: 'adopt'
+
+        # Step 3: Build Docker image for database
+        - name: Build database Docker image
+          run: docker build -t database ./db
+          # Builds MySQL database image located in ./db folder
+
+        # Step 4: Run database container
+        - name: Start database container
+          run: docker run --name employees -dp 33060:3306 database
+          # Exposes container MySQL on localhost:33060 for integration tests
+
+        # Step 5: Run Integration Tests
+        - name: Integration Tests
+          run: mvn -Dtest=com.napier.sem.PopulationAppIntegrationTest test
+          # Executes database-dependent tests
+
+        # Step 6: Stop and remove container after tests
+        - name: Stop and remove database container
+          run: |
+            docker stop employees
+            docker rm employees
+            docker image rm database
+          # Clean up after integration testing
+
+        # Step 7: Upload code coverage to Codecov
+        - name: Codecov
+          uses: codecov/codecov-action@v2
+          with:
+            directory: ./target/site/jacoco
+            flags: IntegrationTests
+            verbose: true
+
   build:
     # Job name shown in the Actions UI
     name: population action
