@@ -1,64 +1,205 @@
 package com.napier.sem;
 
 import java.sql.*;
-/*
-* This app will connect to the mySQL database and then allow user to retrieve information on the world population
+import java.util.ArrayList;
+
+/**
+ * The populationApp class serves as the main entry point for generating
+ * population-related reports from the world database. It connects to a MySQL database,
+ * retrieves data, and prints formatted reports to the console.
  */
-public class populationApp
-{
-    public static void main(String[] args)
-    {
-        try
-        {
-            // Load Database driver
+public class populationApp {
+    /**
+     * JDBC connection to the database.
+     */
+    private Connection con = null;
+
+    /**
+     * Main method that drives the application workflow:
+     * connects to the database, retrieves country data, prints the report,
+     * and disconnects from the database.
+     *
+     * @param args command-line arguments (not used)
+     */
+    public static void main(String[] args) {
+        populationApp appPop = new populationApp();
+
+        // Connect to database
+        appPop.connect();
+
+        // Get country report
+        ArrayList<countryReport> countries = appPop.getAllCountriesByPopulation();
+
+        // Display results
+        appPop.printCountryReport(countries);
+
+        // Disconnect from database
+        appPop.disconnect();
+    }
+
+    /**
+     * Connects to the MySQL database using JDBC.
+     * Retries up to 100 times if connection fails.
+     */
+    public void connect() {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             System.out.println("Could not load SQL driver");
             System.exit(-1);
         }
 
-        // Connection to the database
-        Connection con = null;
         int retries = 100;
-        for (int i = 0; i < retries; ++i)
-        {
+        for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database...");
-            try
-            {
-                // Wait a bit for db to start
+            try {
                 Thread.sleep(1000);
-                // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
+                con = DriverManager.getConnection(
+                        "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true",
+                        "root", "example"
+                );
                 System.out.println("Successfully connected");
-                // Wait a bit
                 Thread.sleep(1000);
-                // Exit for loop
                 break;
-            }
-            catch (SQLException sqle)
-            {
+            } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + i);
                 System.out.println(sqle.getMessage());
-            }
-            catch (InterruptedException ie)
-            {
+            } catch (InterruptedException ie) {
                 System.out.println("Thread interrupted? Should not happen.");
             }
         }
+    }
 
-        if (con != null)
-        {
-            try
-            {
-                // Close connection
+    /**
+     * Disconnects from the database if a connection exists.
+     */
+    public void disconnect() {
+        if (con != null) {
+            try {
                 con.close();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println("Error closing connection to database");
             }
         }
     }
+
+    /**
+     * Retrieves all countries from the database ordered by population in descending order.
+     *
+     * @return a list of countryReport objects containing country data
+     */
+    public ArrayList<countryReport> getAllCountriesByPopulation() {
+        ArrayList<countryReport> countries = new ArrayList<>();
+
+        if (con == null) {
+            System.out.println("Connection not established — cannot retrieve data.");
+            return countries;
+        }
+
+        try {
+            Statement stmt = con.createStatement();
+            String query = "SELECT code, name, continent, region, population, capital FROM country ORDER BY population DESC";
+            ResultSet rset = stmt.executeQuery(query);
+
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error retrieving country data: " + e.getMessage());
+        }
+
+        return countries;
+    }
+
+    /**
+     * Prints a formatted country report to the console.
+     *
+     * @param countries a list of countryReport objects to display
+     */
+    public void printCountryReport(ArrayList<countryReport> countries) {
+        System.out.printf("%-5s %-47s %-15s %-28s %-11s %-10s%n", "Code", "Name", "Continent", "Region", "Population", "Capital");
+        for (countryReport c : countries) {
+            System.out.printf("%-5s %-47s %-15s %-28s %-11d %-10s%n",
+                    c.code, c.name, c.continent, c.region, c.population, c.capital);
+        }
+    }
+
+    // Placeholder methods for future reports
+
+    /**
+     * Retrieves all cities ordered by population.
+     *
+     * @return an empty list of cityReport objects
+     */
+    public ArrayList<cityReport> getAllCityByPopulation() { return new ArrayList<>(); }
+
+    /**
+     * Prints a formatted city report to the console.
+     *
+     * @param cities a list of cityReport objects to display
+     */
+    public void printCityReport(ArrayList<cityReport> cities) {}
+
+    /**
+     * Retrieves all capital cities ordered by population.
+     *
+     * @return an empty list of capitalCityReport objects
+     */
+    public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
+
+    /**
+     * Prints a formatted capital city report to the console.
+     *
+     * @param cities a list of capitalCityReport objects to display
+     */
+    public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
+
+    /**
+     * Retrieves population data for various regions.
+     *
+     * @return an empty list of populationReport objects
+     */
+    public ArrayList<populationReport> getAllPopulation() { return new ArrayList<>(); }
+
+    /**
+     * Prints a formatted population report to the console.
+     *
+     * @param population a list of populationReport objects to display
+     */
+    public void printPopulationReport(ArrayList<populationReport> population) {}
+
+    /**
+     * Retrieves summary population data.
+     *
+     * @return an empty list of populationSummary objects
+     */
+    public ArrayList<populationSummary> getAllPopulationSummary() { return new ArrayList<>(); }
+
+    /**
+     * Prints a formatted population summary report to the console.
+     *
+     * @param summary a list of populationSummary objects to display
+     */
+    public void printPopulationSummary(ArrayList<populationSummary> summary) {}
+
+    /**
+     * Retrieves language data ordered by number of speakers.
+     *
+     * @return an empty list of languageReport objects
+     */
+    public ArrayList<languageReport> getAllLanguageByPopulation() { return new ArrayList<>(); }
+
+    /**
+     * Prints a formatted language report to the console.
+     *
+     * @param languages a list of languageReport objects to display
+     */
+    public void printLanguageReport(ArrayList<languageReport> languages) {}
 }

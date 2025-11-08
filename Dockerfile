@@ -1,5 +1,5 @@
 # Uses the official OpenJDK 17 base image to provide a Java runtime environment
-FROM openjdk:17
+FROM amazoncorretto:17
 
 # Copies the packaged JAR file from the local target directory into the container's /tmp directory
 COPY ./target/sem_assessment-0.1.0.4-jar-with-dependencies.jar /tmp
