@@ -1,7 +1,12 @@
 package com.napier.sem;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * The populationApp class serves as the main entry point for generating
@@ -21,27 +26,32 @@ public class populationApp {
      *
      * @param args command-line arguments (not used)
      */
+
     public static void main(String[] args) {
-        populationApp appPop = new populationApp();
+        populationApp app = new populationApp();
 
         // Connect to database
-        appPop.connect();
+        if (args.length < 2) {
+            app.connect("db:3306", 500);
+        } else {
+            app.connect(args[0], Integer.parseInt(args[1]));
+        }
 
-        // Get country report
-        ArrayList<countryReport> countries = appPop.getAllCountriesByPopulation();
+        // Run country report directly
+        ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
+        app.outputCountryReport(countries, "CountryPopulation.md");
 
-        // Display results
-        appPop.printCountryReport(countries);
-
-        // Disconnect from database
-        appPop.disconnect();
+        // Disconnect
+        app.disconnect();
     }
+
+
 
     /**
      * Connects to the MySQL database using JDBC.
      * Retries up to 100 times if connection fails.
      */
-    public void connect() {
+    public void connect(String location, int delay) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -51,11 +61,11 @@ public class populationApp {
 
         int retries = 100;
         for (int i = 0; i < retries; ++i) {
-            System.out.println("Connecting to database...");
+            System.out.println("Connecting to database at " + location + "...");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(delay);
                 con = DriverManager.getConnection(
-                        "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true",
+                        "jdbc:mysql://" + location + "/world?useSSL=false&allowPublicKeyRetrieval=true",
                         "root", "example"
                 );
                 System.out.println("Successfully connected");
@@ -69,6 +79,7 @@ public class populationApp {
             }
         }
     }
+
 
     /**
      * Disconnects from the database if a connection exists.
@@ -98,7 +109,14 @@ public class populationApp {
 
         try {
             Statement stmt = con.createStatement();
-            String query = "SELECT code, name, continent, region, population, capital FROM country ORDER BY population DESC";
+            String query = """
+            SELECT country.code, country.name, country.continent, country.region,
+                   country.population, city.name AS capital_name
+            FROM country
+            LEFT JOIN city ON country.capital = city.id
+            ORDER BY country.population DESC
+        """;
+
             ResultSet rset = stmt.executeQuery(query);
 
             while (rset.next()) {
@@ -108,7 +126,7 @@ public class populationApp {
                 c.continent = rset.getString("continent");
                 c.region = rset.getString("region");
                 c.population = rset.getInt("population");
-                c.capital = rset.getString("capital");
+                c.capital = rset.getString("capital_name");
                 countries.add(c);
             }
         } catch (Exception e) {
@@ -116,6 +134,37 @@ public class populationApp {
         }
 
         return countries;
+    }
+
+    public void outputCountryReport(ArrayList<countryReport> countries, String filename) {
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No country data available.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        // Markdown header
+        sb.append("| Code | Name | Continent | Region | Population | Capital |\r\n");
+        sb.append("| --- | --- | --- | --- | --- | --- |\r\n");
+
+        for (countryReport country : countries) {
+            if (country == null) continue;
+            sb.append("| " + country.code + " | " +
+                    country.name + " | " +
+                    country.continent + " | " +
+                    country.region + " | " +
+                    country.population + " | " +
+                    country.capital + " |\r\n");
+        }
+
+        try {
+            new File("./reports/").mkdir();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -16,21 +16,33 @@ public class PopulationAppIntegrationTest {
 
     @BeforeAll
     static void init() {
-        try {
-            // Load the MySQL JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        int retries = 10;
+        int delayMs = 2000;
 
-            // Connect to the local Docker MySQL database
-            // Port 33060 is mapped to Docker container's 3306
-            con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root",
-                    "example"
-            );
-        } catch (Exception e) {
-            // Fail the test suite if connection cannot be established
-            fail("Failed to connect to the database: " + e.getMessage());
+        for (int i = 0; i < retries; i++) {
+            try {
+                // Load the MySQL JDBC driver
+                Class.forName("com.mysql.cj.jdbc.Driver");
+
+                // Connect to the local Docker MySQL database
+                con = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true",
+                        "root",
+                        "example"
+                );
+
+                System.out.println("Connected to database on attempt " + (i + 1));
+                return; // success
+            } catch (Exception e) {
+                System.out.println("DB not ready, retrying... (" + (i + 1) + "/" + retries + ")");
+                try {
+                    Thread.sleep(delayMs);
+                } catch (InterruptedException ignored) {}
+            }
         }
+
+        // Fail the test suite if connection cannot be established
+        fail("Failed to connect to the database after " + retries + " attempts");
     }
 
     @Test

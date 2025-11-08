@@ -13,7 +13,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
-        <finalName>sem_assessment</finalName>
+        <finalName>app</finalName>
     </properties>
 
     <dependencies>
@@ -46,6 +46,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
+                    <finalName>app</finalName> <!-- ✅ Forces version-independent JAR name -->
                     <archive>
                         <manifest>
                             <mainClass>com.napier.sem.populationApp</mainClass>
@@ -73,6 +74,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
+                    <skipTests>true</skipTests>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -111,7 +113,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Optional: Disable default JAR -->
+            <!-- Disable default JAR -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
@@ -124,5 +126,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

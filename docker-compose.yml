@@ -1,4 +1,5 @@
-version: '3'
+version: '3.8'
+
 services:
 
   app:
@@ -6,6 +7,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: ["10"]  # Pass result limit as argument
+    working_dir: /tmp
+    volumes:
+      - ./reports:/tmp/reports  # Host ./reports maps to container /tmp/reports
 
   db:
     build: db/.
@@ -14,9 +19,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: world
-
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
       interval: 10s
       timeout: 5s
       retries: 5

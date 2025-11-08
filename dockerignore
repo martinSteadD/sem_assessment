@@ -1,0 +1,17 @@
+# Ignore everything in target except the JAR
+target/
+!target/app-jar-with-dependencies.jar
+
+# Ignore Git and IDE clutter
+.git/
+.gitignore
+.idea/
+*.iml
+
+# Ignore reports and markdown
+reports/
+*.md
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
