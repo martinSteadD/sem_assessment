@@ -1,7 +1,9 @@
 name: A workflow for the Population App
 
-on: push
-
+on:
+  push:
+    branches:
+      - master
 jobs:
   UnitTests:
     name: Unit Tests
