@@ -46,7 +46,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <finalName>app</finalName> <!-- ✅ Forces version-independent JAR name -->
+                    <finalName>app</finalName>
                     <archive>
                         <manifest>
                             <mainClass>com.napier.sem.populationApp</mainClass>
@@ -74,7 +74,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests> <!-- ✅ Tests will run -->
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -96,7 +96,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase> <!-- ✅ Coverage report generated after tests -->
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -127,3 +127,4 @@
         </plugins>
     </build>
 </project>
+
