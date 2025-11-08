@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+
 jobs:
   UnitTests:
     name: Unit Tests
@@ -23,7 +24,14 @@ jobs:
       - name: Run Unit Tests
         run: mvn --batch-mode test -Dsurefire.printSummary=true
 
+      - name: Show Test Report Summary
+        if: failure()
+        run: |
+          echo "Test failures detected. Showing Surefire report:"
+          cat target/surefire-reports/*.txt || echo "No report found"
+
       - name: Upload Coverage to Codecov
+        if: success()
         uses: codecov/codecov-action@v2
         with:
           directory: ./target/site/jacoco
@@ -49,12 +57,21 @@ jobs:
         run: |
           docker build -t database ./db
           docker run --name db -dp 33060:3306 database
+          echo "Waiting for DB to initialize..."
+          sleep 10
           mvn --batch-mode -Dtest=com.napier.sem.PopulationAppIntegrationTest test -Dsurefire.printSummary=true
           docker stop db
           docker rm db
           docker image rm database
 
+      - name: Show Integration Test Report
+        if: failure()
+        run: |
+          echo "Integration test failures detected:"
+          cat target/surefire-reports/*.txt || echo "No report found"
+
       - name: Upload Coverage to Codecov
+        if: success()
         uses: codecov/codecov-action@v2
         with:
           directory: ./target/site/jacoco
@@ -86,3 +103,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+            ./target/*.jar
