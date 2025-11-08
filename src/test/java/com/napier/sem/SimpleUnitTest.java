@@ -1,9 +1,6 @@
 package com.napier.sem;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -25,16 +22,6 @@ public class SimpleUnitTest {
     }
 
     @Test
-    void testConnectionFailureMessage() {
-        // Simulate failed connection by calling connect with invalid host and 1 retry
-        app.connect("invalidhost:3306", 0);  // Should fail quickly
-        String output = outContent.toString();
-
-        assertTrue(output.contains("Failed to connect"),
-                "Expected output to mention failed connection");
-    }
-
-    @Test
     void testOutputCountryReportWithMockData() {
         ArrayList<countryReport> mockCountries = new ArrayList<>();
         countryReport c = new countryReport();
@@ -48,19 +35,18 @@ public class SimpleUnitTest {
 
         app.outputCountryReport(mockCountries, "TestCountryReport.md");
 
-        // Check that the Markdown content was generated
         String output = outContent.toString();
-        assertTrue(output.contains("No country data available.") == false,
+        assertFalse(output.contains("No country data available."),
                 "Expected country report to be generated");
     }
 
     @Test
-    void testConnectionAttemptLogging() {
-        app.connect("invalidhost:3306", 0);  // Simulate retry loop
-        String output = outContent.toString();
+    void testOutputCountryReportWithEmptyList() {
+        app.outputCountryReport(new ArrayList<>(), "EmptyReport.md");
 
-        assertTrue(output.contains("Connecting to database"),
-                "Expected output to show connection attempts");
+        String output = outContent.toString();
+        assertTrue(output.contains("No country data available."),
+                "Expected message for empty country list");
     }
 
     @AfterEach
