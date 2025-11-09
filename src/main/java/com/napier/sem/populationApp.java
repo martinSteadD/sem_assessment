@@ -37,7 +37,7 @@ public class populationApp {
         if (dbPort == null || dbPort.isEmpty()) dbPort = "3306";
 
         String dbLocation = dbHost + ":" + dbPort;
-        app.connect(dbLocation, 1500);
+        app.connect(dbLocation, 3000);
 
         // Run country report directly
         ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
