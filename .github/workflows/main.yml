@@ -96,8 +96,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Package the App
-        run: mvn --batch-mode package -DskipTests
+      - name: Package the App (skip tests)
+        run: mvn --batch-mode package -DskipTests=true
 
       - name: Wait for DB to be Ready
         run: |
@@ -117,4 +117,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
           automatic_release_tag: "latest"
-          files:
+          files: |
+            target/*.jar
