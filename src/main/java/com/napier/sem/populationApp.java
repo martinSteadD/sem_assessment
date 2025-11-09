@@ -31,11 +31,12 @@ public class populationApp {
         populationApp app = new populationApp();
 
         // Connect to database
-        if (args.length < 2) {
-            app.connect("db:3306", 500);
-        } else {
-            app.connect(args[0], Integer.parseInt(args[1]));
+        String dbHost = System.getenv("DB_HOST");
+        if (dbHost == null || dbHost.isEmpty()) {
+            dbHost = "db:3306"; // fallback for Compose
         }
+        app.connect(dbHost, 500);
+
 
         // Run country report directly
         ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
@@ -59,7 +60,7 @@ public class populationApp {
             System.exit(-1);
         }
 
-        int retries = 100;
+        int retries = 20;
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database at " + location + "...");
             try {
@@ -69,7 +70,7 @@ public class populationApp {
                         "root", "example"
                 );
                 System.out.println("Successfully connected");
-                Thread.sleep(1000);
+                Thread.sleep(35000);
                 break;
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + i);
