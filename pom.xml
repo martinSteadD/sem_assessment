@@ -74,7 +74,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <skipTests>false</skipTests> <!-- ✅ Tests will run -->
+
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
@@ -96,7 +96,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase> <!-- ✅ Coverage report generated after tests -->
+                        <phase>verify</phase> <!-- Coverage report generated after tests -->
                         <goals>
                             <goal>report</goal>
                         </goals>
