@@ -26,17 +26,18 @@ public class populationApp {
      *
      * @param args command-line arguments (not used)
      */
-
     public static void main(String[] args) {
         populationApp app = new populationApp();
 
         // Connect to database
         String dbHost = System.getenv("DB_HOST");
-        if (dbHost == null || dbHost.isEmpty()) {
-            dbHost = "db:3306"; // fallback for Compose
-        }
-        app.connect(dbHost, 500);
+        String dbPort = System.getenv("DB_PORT");
 
+        if (dbHost == null || dbHost.isEmpty()) dbHost = "db";
+        if (dbPort == null || dbPort.isEmpty()) dbPort = "3306";
+
+        String dbLocation = dbHost + ":" + dbPort;
+        app.connect(dbLocation, 1500);
 
         // Run country report directly
         ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
@@ -46,11 +47,9 @@ public class populationApp {
         app.disconnect();
     }
 
-
-
     /**
      * Connects to the MySQL database using JDBC.
-     * Retries up to 100 times if connection fails.
+     * Retries up to 20 times if connection fails.
      */
     public void connect(String location, int delay) {
         try {
@@ -60,7 +59,7 @@ public class populationApp {
             System.exit(-1);
         }
 
-        int retries = 20;
+        int retries = 50;
         for (int i = 0; i < retries; ++i) {
             System.out.println("Connecting to database at " + location + "...");
             try {
@@ -70,7 +69,7 @@ public class populationApp {
                         "root", "example"
                 );
                 System.out.println("Successfully connected");
-                Thread.sleep(35000);
+                Thread.sleep(5000);
                 break;
             } catch (SQLException sqle) {
                 System.out.println("Failed to connect to database attempt " + i);
@@ -80,7 +79,6 @@ public class populationApp {
             }
         }
     }
-
 
     /**
      * Disconnects from the database if a connection exists.
@@ -183,73 +181,23 @@ public class populationApp {
 
     // Placeholder methods for future reports
 
-    /**
-     * Retrieves all cities ordered by population.
-     *
-     * @return an empty list of cityReport objects
-     */
     public ArrayList<cityReport> getAllCityByPopulation() { return new ArrayList<>(); }
 
-    /**
-     * Prints a formatted city report to the console.
-     *
-     * @param cities a list of cityReport objects to display
-     */
     public void printCityReport(ArrayList<cityReport> cities) {}
 
-    /**
-     * Retrieves all capital cities ordered by population.
-     *
-     * @return an empty list of capitalCityReport objects
-     */
     public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
 
-    /**
-     * Prints a formatted capital city report to the console.
-     *
-     * @param cities a list of capitalCityReport objects to display
-     */
     public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
 
-    /**
-     * Retrieves population data for various regions.
-     *
-     * @return an empty list of populationReport objects
-     */
     public ArrayList<populationReport> getAllPopulation() { return new ArrayList<>(); }
 
-    /**
-     * Prints a formatted population report to the console.
-     *
-     * @param population a list of populationReport objects to display
-     */
     public void printPopulationReport(ArrayList<populationReport> population) {}
 
-    /**
-     * Retrieves summary population data.
-     *
-     * @return an empty list of populationSummary objects
-     */
     public ArrayList<populationSummary> getAllPopulationSummary() { return new ArrayList<>(); }
 
-    /**
-     * Prints a formatted population summary report to the console.
-     *
-     * @param summary a list of populationSummary objects to display
-     */
     public void printPopulationSummary(ArrayList<populationSummary> summary) {}
 
-    /**
-     * Retrieves language data ordered by number of speakers.
-     *
-     * @return an empty list of languageReport objects
-     */
     public ArrayList<languageReport> getAllLanguageByPopulation() { return new ArrayList<>(); }
 
-    /**
-     * Prints a formatted language report to the console.
-     *
-     * @param languages a list of languageReport objects to display
-     */
     public void printLanguageReport(ArrayList<languageReport> languages) {}
 }
