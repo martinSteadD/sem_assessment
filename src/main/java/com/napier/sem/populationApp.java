@@ -43,9 +43,15 @@ public class populationApp {
         ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
         app.outputCountryReport(countries, "CountryPopulation.md");
 
+        // Run city report directly
+        ArrayList<cityReport> cities = app.getAllCityByPopulation();
+        app.outputCityReport(cities, "CityPopulation.md");
+
         // Disconnect
         app.disconnect();
     }
+
+
 
     /**
      * Connects to the MySQL database using JDBC.
@@ -182,9 +188,78 @@ public class populationApp {
     // Placeholder methods for future reports
 
     public ArrayList<cityReport> getAllCityByPopulation() { return new ArrayList<>(); }
+        ArrayList<cityReport> cities = new ArrayList<>();
 
-    public void printCityReport(ArrayList<cityReport> cities) {}
+            if (con == null) {
+            System.out.println("Connection not established — cannot retrieve data.");
+            return cities;
+        }
 
+            try {
+            Statement stmt = con.createStatement();
+            String query = """
+                SELECT city.name, country.name AS 'Country', city.district, city.population,
+                FROM city, country
+                LEFT JOIN country ON city.countrycode = country.code
+                ORDER BY city.population DESC
+            """;
+
+            ResultSet rset = stmt.executeQuery(query);
+
+            while (rset.next()) {
+                cityReport c = new cityReport();
+                c.name = rset.getString("name");
+                c.country = rset.getString("country");
+                c.district = rset.getString("continent");
+                c.population = rset.getInt("population");
+                cities.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error retrieving city data: " + e.getMessage());
+        }
+
+            return cities;
+    }
+
+    public void outputCityReport(ArrayList<cityReport> cities, String filename) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available.");
+            return;
+        }
+
+
+
+        StringBuilder sb = new StringBuilder();
+        // Markdown header
+        sb.append("| Name | Country | District | Population |\r\n");
+        sb.append("| --- | --- | --- | --- |\r\n");
+
+        for (cityReport city : cities) {
+            if (city == null) continue;
+            sb.append("| " +
+                    city.name + " | " +
+                    city.country + " | " +
+                    city.district + " | " +
+                    city.population + " |\r\n");
+        }
+
+        try {
+            new File("./reports/").mkdir();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printCityReport(ArrayList<cityReport> cities) {
+        System.out.printf("%-5s %-47s %-15s %-28s %-11s %-10s%n", "Name", "Country", "District", "Population");
+        for (cityReport c : cities) {
+            System.out.printf("%-47s %-47s %-28s %-11d %-10s%n",
+                    c.name, c.country, c.district, c.population);
+        }
+    }
     public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
 
     public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
