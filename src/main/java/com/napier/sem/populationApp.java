@@ -197,10 +197,10 @@ public class populationApp {
         try {
             Statement stmt = con.createStatement();
             String query = """
-            SELECT city.name AS city_name, country.name AS country_name, city.district, city.population
-            FROM city,country
-            LEFT JOIN country ON  city.id = country.capital
-            ORDER BY city.population DESC;
+            SELECT ci.name AS city_name, co.name AS country_name, ci.district, ci.population
+            FROM city ci
+            LEFT JOIN country co ON  ci.id = co.capital
+            ORDER BY ci.population DESC;
         """;
 
             ResultSet rset = stmt.executeQuery(query);
@@ -222,7 +222,7 @@ public class populationApp {
 
     public void outputCityReport(ArrayList<cityReport> cities, String filename) {
         if (cities == null || cities.isEmpty()) {
-            System.out.println("No country data available.");
+            System.out.println("No city data available.");
             return;
         }
 
@@ -252,9 +252,9 @@ public class populationApp {
 
 
     public void printCityReport(ArrayList<cityReport> cities) {
-        System.out.printf("%-5s %-47s %-15s %-28s %-11s%n", "Name", "Country", "District", "Population");
+        System.out.printf("%-47s %-47s %-28s %-28d%n", "Name", "Country", "District", "Population");
         for (cityReport c : cities)
-            System.out.printf("%-47s %-47s %-28s %-11d%n",
+            System.out.printf("%-47s %-47s %-28s %-28d%n",
                     c.name, c.country, c.district, c.population);
 
     }
