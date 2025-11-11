@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * The populationApp class serves as the main entry point for generating
@@ -44,7 +43,7 @@ public class populationApp {
         app.outputCountryReport(countries, "CountryPopulation.md");
 
         // Run city report directly
-        ArrayList<cityReport> cities = app.getAllCityByPopulation();
+        ArrayList<cityReport> cities = app.getAllCitiesByPopulation();
         app.outputCityReport(cities, "CityPopulation.md");
 
         // Disconnect
@@ -187,47 +186,45 @@ public class populationApp {
 
     // Placeholder methods for future reports
 
-    public ArrayList<cityReport> getAllCityByPopulation() { return new ArrayList<>(); }
+    public ArrayList<cityReport> getAllCitiesByPopulation() {
         ArrayList<cityReport> cities = new ArrayList<>();
 
-            if (con == null) {
+        if (con == null) {
             System.out.println("Connection not established — cannot retrieve data.");
             return cities;
         }
 
-            try {
+        try {
             Statement stmt = con.createStatement();
             String query = """
-                SELECT city.name, country.name AS 'Country', city.district, city.population,
-                FROM city, country
-                LEFT JOIN country ON city.countrycode = country.code
-                ORDER BY city.population DESC
-            """;
+            SELECT city.name AS city_name, country.name AS country_name, city.district, city.population,
+            FROM city,country
+            LEFT JOIN city ON country.capital = city.id
+            ORDER BY city.population DESC
+        """;
 
             ResultSet rset = stmt.executeQuery(query);
 
             while (rset.next()) {
                 cityReport c = new cityReport();
-                c.name = rset.getString("name");
-                c.country = rset.getString("country");
-                c.district = rset.getString("continent");
+                c.name = rset.getString("city_name");
+                c.country = rset.getString("country_name");
+                c.district = rset.getString("district");
                 c.population = rset.getInt("population");
                 cities.add(c);
             }
         } catch (Exception e) {
-            System.out.println("Error retrieving city data: " + e.getMessage());
+            System.out.println("Error retrieving country data: " + e.getMessage());
         }
 
-            return cities;
+        return cities;
     }
 
     public void outputCityReport(ArrayList<cityReport> cities, String filename) {
         if (cities == null || cities.isEmpty()) {
-            System.out.println("No city data available.");
+            System.out.println("No country data available.");
             return;
         }
-
-
 
         StringBuilder sb = new StringBuilder();
         // Markdown header
@@ -253,12 +250,13 @@ public class populationApp {
         }
     }
 
+
     public void printCityReport(ArrayList<cityReport> cities) {
-        System.out.printf("%-5s %-47s %-15s %-28s %-11s %-10s%n", "Name", "Country", "District", "Population");
-        for (cityReport c : cities) {
-            System.out.printf("%-47s %-47s %-28s %-11d %-10s%n",
+        System.out.printf("%-5s %-47s %-15s %-28s %-11s%n", "Name", "Country", "District", "Population");
+        for (cityReport c : cities)
+            System.out.printf("%-47s %-47s %-28s %-11d%n",
                     c.name, c.country, c.district, c.population);
-        }
+
     }
     public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
 
