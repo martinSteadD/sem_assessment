@@ -40,11 +40,11 @@ public class populationApp {
 
         // Run country report directly
         ArrayList<countryReport> countries = countryReport.getAllCountriesByPopulation();
-        app.outputCountryReport(countries, "CountryPopulation.md");
+        countryReport.outputCountryReport(countries, "CountryPopulation.md");
 
         // Run city report directly
         ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation();
-        app.outputCityReport(cities, "CityPopulation.md");
+        cityReport.outputCityReport(cities, "CityPopulation.md");
 
         // Disconnect
         app.disconnect();
@@ -95,69 +95,6 @@ public class populationApp {
             } catch (Exception e) {
                 System.out.println("Error closing connection to database");
             }
-        }
-    }
-
-
-    public void outputCountryReport(ArrayList<countryReport> countries, String filename) {
-        if (countries == null || countries.isEmpty()) {
-            System.out.println("No country data available.");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        // Markdown header
-        sb.append("| Code | Name | Continent | Region | Population | Capital |\r\n");
-        sb.append("| --- | --- | --- | --- | --- | --- |\r\n");
-
-        for (countryReport country : countries) {
-            if (country == null) continue;
-            sb.append("| " + country.code + " | " +
-                    country.name + " | " +
-                    country.continent + " | " +
-                    country.region + " | " +
-                    country.population + " | " +
-                    country.capital + " |\r\n");
-        }
-
-        try {
-            new File("./reports/").mkdir();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
-            writer.write(sb.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void outputCityReport(ArrayList<cityReport> cities, String filename) {
-        if (cities == null || cities.isEmpty()) {
-            System.out.println("No city data available.");
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        // Markdown header
-        sb.append("| Name | Country | District | Population |\r\n");
-        sb.append("| --- | --- | --- | --- |\r\n");
-
-        for (cityReport city : cities) {
-            if (city == null) continue;
-            sb.append("| " +
-                      city.name + " | " +
-                      city.country + " | " +
-                      city.district + " | " +
-                      city.population + " |\r\n");
-        }
-
-        try {
-            new File("./reports/").mkdir();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
-            writer.write(sb.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

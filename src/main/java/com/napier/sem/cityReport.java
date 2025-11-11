@@ -71,6 +71,34 @@ public class cityReport extends populationApp {
         return cities;
     }
 
+    public static void outputCityReport(ArrayList<cityReport> cities, String filename) {
+        if (cities == null || cities.isEmpty()) {
+            System.out.println("No city data available.");
+            return;
+        }
 
+        StringBuilder sb = new StringBuilder();
+        // Markdown header
+        sb.append("| Name | Country | District | Population |\r\n");
+        sb.append("| --- | --- | --- | --- |\r\n");
+
+        for (cityReport city : cities) {
+            if (city == null) continue;
+            sb.append("| " +
+                    city.name + " | " +
+                    city.country + " | " +
+                    city.district + " | " +
+                    city.population + " |\r\n");
+        }
+
+        try {
+            new File("./reports/").mkdir();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

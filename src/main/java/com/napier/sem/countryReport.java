@@ -1,5 +1,9 @@
 package com.napier.sem;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -83,6 +87,37 @@ public class countryReport extends populationApp {
         }
 
         return countries;
+    }
+
+    public static void outputCountryReport(ArrayList<countryReport> countries, String filename) {
+        if (countries == null || countries.isEmpty()) {
+            System.out.println("No country data available.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        // Markdown header
+        sb.append("| Code | Name | Continent | Region | Population | Capital |\r\n");
+        sb.append("| --- | --- | --- | --- | --- | --- |\r\n");
+
+        for (countryReport country : countries) {
+            if (country == null) continue;
+            sb.append("| " + country.code + " | " +
+                    country.name + " | " +
+                    country.continent + " | " +
+                    country.region + " | " +
+                    country.population + " | " +
+                    country.capital + " |\r\n");
+        }
+
+        try {
+            new File("./reports/").mkdir();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
