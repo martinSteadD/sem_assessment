@@ -16,7 +16,7 @@ public class populationApp {
     /**
      * JDBC connection to the database.
      */
-    private Connection con = null;
+    public static Connection con = null;
 
     /**
      * Main method that drives the application workflow:
@@ -39,11 +39,11 @@ public class populationApp {
         app.connect(dbLocation, 3000);
 
         // Run country report directly
-        ArrayList<countryReport> countries = app.getAllCountriesByPopulation();
+        ArrayList<countryReport> countries = countryReport.getAllCountriesByPopulation();
         app.outputCountryReport(countries, "CountryPopulation.md");
 
         // Run city report directly
-        ArrayList<cityReport> cities = app.getAllCitiesByPopulation();
+        ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation();
         app.outputCityReport(cities, "CityPopulation.md");
 
         // Disconnect
@@ -98,47 +98,6 @@ public class populationApp {
         }
     }
 
-    /**
-     * Retrieves all countries from the database ordered by population in descending order.
-     *
-     * @return a list of countryReport objects containing country data
-     */
-    public ArrayList<countryReport> getAllCountriesByPopulation() {
-        ArrayList<countryReport> countries = new ArrayList<>();
-
-        if (con == null) {
-            System.out.println("Connection not established — cannot retrieve data.");
-            return countries;
-        }
-
-        try {
-            Statement stmt = con.createStatement();
-            String query = """
-            SELECT country.code, country.name, country.continent, country.region,
-                   country.population, city.name AS capital_name
-            FROM country
-            LEFT JOIN city ON country.capital = city.id
-            ORDER BY country.population DESC;
-        """;
-
-            ResultSet rset = stmt.executeQuery(query);
-
-            while (rset.next()) {
-                countryReport c = new countryReport();
-                c.code = rset.getString("code");
-                c.name = rset.getString("name");
-                c.continent = rset.getString("continent");
-                c.region = rset.getString("region");
-                c.population = rset.getInt("population");
-                c.capital = rset.getString("capital_name");
-                countries.add(c);
-            }
-        } catch (Exception e) {
-            System.out.println("Error retrieving country data: " + e.getMessage());
-        }
-
-        return countries;
-    }
 
     public void outputCountryReport(ArrayList<countryReport> countries, String filename) {
         if (countries == null || countries.isEmpty()) {
@@ -171,54 +130,6 @@ public class populationApp {
         }
     }
 
-    /**
-     * Prints a formatted country report to the console.
-     *
-     * @param countries a list of countryReport objects to display
-     */
-    public void printCountryReport(ArrayList<countryReport> countries) {
-        System.out.printf("%-5s %-47s %-15s %-28s %-11s %-10s%n", "Code", "Name", "Continent", "Region", "Population", "Capital");
-        for (countryReport c : countries) {
-            System.out.printf("%-5s %-47s %-15s %-28s %-11d %-10s%n",
-                    c.code, c.name, c.continent, c.region, c.population, c.capital);
-        }
-    }
-
-    // Placeholder methods for future reports
-
-    public ArrayList<cityReport> getAllCitiesByPopulation() {
-        ArrayList<cityReport> cities = new ArrayList<>();
-
-        if (con == null) {
-            System.out.println("Connection not established — cannot retrieve data.");
-            return cities;
-        }
-
-        try {
-            Statement stmt = con.createStatement();
-            String query = """
-            SELECT ci.name AS city_name, co.name AS country_name, ci.district, ci.population
-            FROM city ci
-            LEFT JOIN country co ON  ci.id = co.capital
-            ORDER BY ci.population DESC;
-        """;
-
-            ResultSet rset = stmt.executeQuery(query);
-
-            while (rset.next()) {
-                cityReport c = new cityReport();
-                c.name = rset.getString("city_name");
-                c.country = rset.getString("country_name");
-                c.district = rset.getString("district");
-                c.population = rset.getInt("population");
-                cities.add(c);
-            }
-        } catch (Exception e) {
-            System.out.println("Error retrieving country data: " + e.getMessage());
-        }
-
-        return cities;
-    }
 
     public void outputCityReport(ArrayList<cityReport> cities, String filename) {
         if (cities == null || cities.isEmpty()) {
@@ -234,10 +145,10 @@ public class populationApp {
         for (cityReport city : cities) {
             if (city == null) continue;
             sb.append("| " +
-                    city.name + " | " +
-                    city.country + " | " +
-                    city.district + " | " +
-                    city.population + " |\r\n");
+                      city.name + " | " +
+                      city.country + " | " +
+                      city.district + " | " +
+                      city.population + " |\r\n");
         }
 
         try {
@@ -250,14 +161,7 @@ public class populationApp {
         }
     }
 
-
-    public void printCityReport(ArrayList<cityReport> cities) {
-        System.out.printf("%-47s %-47s %-28s %-28d%n", "Name", "Country", "District", "Population");
-        for (cityReport c : cities)
-            System.out.printf("%-47s %-47s %-28s %-28d%n",
-                    c.name, c.country, c.district, c.population);
-
-    }
+    // Placeholder methods for future reports
     public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
 
     public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
