@@ -118,7 +118,7 @@ public class populationApp {
                    country.population, city.name AS capital_name
             FROM country
             LEFT JOIN city ON country.capital = city.id
-            ORDER BY country.population DESC
+            ORDER BY country.population DESC;
         """;
 
             ResultSet rset = stmt.executeQuery(query);
@@ -197,10 +197,10 @@ public class populationApp {
         try {
             Statement stmt = con.createStatement();
             String query = """
-            SELECT city.name AS city_name, country.name AS country_name, city.district, city.population,
+            SELECT city.name AS city_name, country.name AS country_name, city.district, city.population
             FROM city,country
-            LEFT JOIN city ON country.capital = city.id
-            ORDER BY city.population DESC
+            LEFT JOIN country ON  city.id = country.capital
+            ORDER BY city.population DESC;
         """;
 
             ResultSet rset = stmt.executeQuery(query);
