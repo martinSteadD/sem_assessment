@@ -33,7 +33,7 @@ public class SimpleUnitTest {
         c.capital = "London";
         mockCountries.add(c);
 
-        app.outputCountryReport(mockCountries, "TestCountryReport.md");
+        countryReport.outputCountryReport(mockCountries, "TestCountryReport.md");
 
         String output = outContent.toString();
         assertFalse(output.contains("No country data available."),
@@ -42,7 +42,7 @@ public class SimpleUnitTest {
 
     @Test
     void testOutputCountryReportWithEmptyList() {
-        app.outputCountryReport(new ArrayList<>(), "EmptyReport.md");
+        countryReport.outputCountryReport(new ArrayList<>(), "EmptyReport.md");
 
         String output = outContent.toString();
         assertTrue(output.contains("No country data available."),
