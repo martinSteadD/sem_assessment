@@ -47,14 +47,31 @@ public class populationReport extends populationApp {
      */
     public double nonCityPercentage;
 
+
+    /**
+     * Retrieves population statistics for all countries, including:
+     * Total population
+     * Population living in cities
+     * Population living outside cities
+     * Percentage of people in cities and non-city areas
+     *
+     * @return ArrayList of populationReport objects containing country population data.
+     */
     public static ArrayList<populationReport> getAllPopulation() {
         ArrayList<populationReport> pops = new ArrayList<>();
 
+        // Prevent writing empty or null data
         if (con == null) {
             System.out.println("Connection not established — cannot retrieve data.");
             return pops;
         }
 
+        // SQL query:
+        // Gets country name and total population
+        // Sums populations of all cities in that country (IFNULL handles countries without cities)
+        // Calculates city % and non-city % of the population
+        // Groups by country to get one row per country
+        // Orders results alphabetically by country name
         try {
             Statement stmt = con.createStatement();
             String query = """
@@ -73,6 +90,7 @@ public class populationReport extends populationApp {
 
             ResultSet rset = stmt.executeQuery(query);
 
+            // Convert SQL results into populationReport objects
             while (rset.next()) {
                 populationReport c = new populationReport();
                 c.name = rset.getString("name");
@@ -84,13 +102,22 @@ public class populationReport extends populationApp {
                 pops.add(c);
             }
         } catch (Exception e) {
+            // Print error if anything goes wrong during query execution or processing
             System.out.println("Error retrieving country data: " + e.getMessage());
         }
 
         return pops;
     }
 
+    /**
+     * Outputs a list of city reports into a markdown-formatted file.
+     * Each city appears as a row in a Markdown table.
+     *
+     * @param pops List of populationReport objects to write.
+     * @param filename Name of the output file to generate.
+     */
     public static void outputPopReport(ArrayList<populationReport> pops, String filename) {
+        // Prevent writing empty or null data
         if (pops == null || pops.isEmpty()) {
             System.out.println("No population data available.");
             return;
@@ -101,6 +128,7 @@ public class populationReport extends populationApp {
         sb.append("| Name | Total Pop | City Pop | City % | Non City Pop | Non City % |\r\n");
         sb.append("| --- | --- | --- | --- | --- | --- |\r\n");
 
+        // Build Markdown table rows from the population data
         for (populationReport pop : pops) {
             if (pop == null) continue;
             sb.append("| " +
@@ -113,11 +141,14 @@ public class populationReport extends populationApp {
         }
 
         try {
+            // Ensure reports/ directory exists
             new File("./reports/").mkdir();
+            // Write Markdown content to specified file
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
             writer.write(sb.toString());
             writer.close();
         } catch (IOException e) {
+            // Print details if writing the file fails
             e.printStackTrace();
         }
     }

@@ -32,9 +32,20 @@ public class populationSummary extends populationApp{
      */
     public String level;
 
+
+    /**
+     * Retrieves a high-level population summary across continents, regions, and countries.
+     * Each row indicates the total population for a geographic level:
+     * Continent
+     * Region
+     * Country
+     *
+     * @return ArrayList of populationSummary objects containing population totals.
+     */
     public static ArrayList<populationSummary> getAllPopulationSummary() {
         ArrayList<populationSummary> popsums = new ArrayList<>();
 
+        // Prevent writing empty or null data
         if (con == null) {
             System.out.println("Connection not established — cannot retrieve data.");
             return popsums;
@@ -42,6 +53,13 @@ public class populationSummary extends populationApp{
 
         try {
             Statement stmt = con.createStatement();
+
+            // SQL query:
+            // First subquery: sum population by continent
+            // Second subquery: sum population by region
+            // Third subquery: population by individual country
+            // UNION ALL combines all levels into a single result set
+            // The result is ordered by 'level' (Continent, Region, Country) and then by name
             String query = """
                 (
                     
@@ -76,6 +94,7 @@ public class populationSummary extends populationApp{
 
             ResultSet rset = stmt.executeQuery(query);
 
+            // Convert SQL results into populationSummary objects
             while (rset.next()) {
                 populationSummary c = new populationSummary();
                 c.level = rset.getString("level");
@@ -85,12 +104,21 @@ public class populationSummary extends populationApp{
                 popsums.add(c);
             }
         } catch (Exception e) {
+            // Print error if anything goes wrong during query execution or processing
             System.out.println("Error retrieving population data: " + e.getMessage());
         }
 
         return popsums;
     }
 
+
+    /**
+     * Outputs a list of city reports into a markdown-formatted file.
+     * Each city appears as a row in a Markdown table.
+     *
+     * @param popsums List of populationSummary objects to write.
+     * @param filename Name of the output file to generate.
+     */
     public static void outputPopSummary(ArrayList<populationSummary> popsums, String filename) {
         if (popsums == null || popsums.isEmpty()) {
             System.out.println("No population summary data available.");
@@ -102,6 +130,7 @@ public class populationSummary extends populationApp{
         sb.append("| Level | Name | Population |\r\n");
         sb.append("| --- | --- | --- |\r\n");
 
+        // Build Markdown table rows from the population summary data
         for (populationSummary popsum : popsums) {
             if (popsum == null) continue;
             sb.append("| " +
@@ -111,11 +140,14 @@ public class populationSummary extends populationApp{
         }
 
         try {
+            // Ensure reports/ directory exists
             new File("./reports/").mkdir();
+            // Write Markdown content to specified file
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
             writer.write(sb.toString());
             writer.close();
         } catch (IOException e) {
+            // Print details if writing the file fails
             e.printStackTrace();
         }
     }
