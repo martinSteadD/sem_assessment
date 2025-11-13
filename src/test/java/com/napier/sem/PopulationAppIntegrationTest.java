@@ -83,5 +83,7 @@ public class PopulationAppIntegrationTest {
         }
     }
 
-    // Optional: Add more integration tests for continents, regions, capital cities, language queries, etc.
+
+
+    // future tests will be added for each of the reports
 }
