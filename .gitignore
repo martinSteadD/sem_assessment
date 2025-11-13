@@ -87,3 +87,6 @@ hs_err_pid*
 .idea/
 
 
+/reports/CityPopulation.md
+/reports/CountryPopulation.md
+/reports/PopulationReport.md
