@@ -16,8 +16,8 @@ public class PopulationAppIntegrationTest {
 
     @BeforeAll
     static void init() {
-        int retries = 10;
-        int delayMs = 2000;
+        int retries = 10; // Number of connection retries
+        int delayMs = 2000; // Delay between retries (in milliseconds)
 
         for (int i = 0; i < retries; i++) {
             try {
@@ -32,11 +32,11 @@ public class PopulationAppIntegrationTest {
                 );
 
                 System.out.println("Connected to database on attempt " + (i + 1));
-                return; // success
+                return; // exit loop once connected - success
             } catch (Exception e) {
                 System.out.println("DB not ready, retrying... (" + (i + 1) + "/" + retries + ")");
                 try {
-                    Thread.sleep(delayMs);
+                    Thread.sleep(delayMs); //wait before next retry
                 } catch (InterruptedException ignored) {}
             }
         }
@@ -45,12 +45,20 @@ public class PopulationAppIntegrationTest {
         fail("Failed to connect to the database after " + retries + " attempts");
     }
 
+    /**
+     * Test that the database connection is successfully established.
+     * Fails if the connection object is null.
+     */
     @Test
     void testDatabaseConnection() {
         // Ensure the database connection is not null
         assertNotNull(con, "Database connection should not be null");
     }
 
+    /**
+     * Test that the 'country' table contains at least one record.
+     * Executes a COUNT query and checks the result is greater than zero.
+     */
     @Test
     void testCountryCount() {
         try (Statement stmt = con.createStatement()) {
@@ -66,6 +74,10 @@ public class PopulationAppIntegrationTest {
         }
     }
 
+    /**
+     * Test that the 'city' table contains data and top cities by population
+     * can be retrieved. Verifies that the highest population is greater than zero.
+     */
     @Test
     void testCityPopulationQuery() {
         try (Statement stmt = con.createStatement()) {

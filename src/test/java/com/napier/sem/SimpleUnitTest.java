@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class SimpleUnitTest {
 
-    private populationApp app;
-    private ByteArrayOutputStream outContent;
-    private PrintStream originalOut;
+    private populationApp app;                 // populationApp instance for testing
+    private ByteArrayOutputStream outContent;  // Captures console output
+    private PrintStream originalOut;           // Original System.out stream
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ public class SimpleUnitTest {
 
     @AfterEach
     void tearDown() {
-        System.setOut(originalOut);
+        System.setOut(originalOut); //restores the original System.out after each test
     }
 
     /**
