@@ -75,7 +75,7 @@ public class populationReport extends populationApp {
 
             while (rset.next()) {
                 populationReport c = new populationReport();
-                c.name = rset.getString("CityName");
+                c.name = rset.getString("name");
                 c.totalPopulation = rset.getInt("totalPopulation");
                 c.cityPopulation = rset.getInt("CityPopulation");
                 c.cityPercentage = rset.getDouble("CityPercentage");
