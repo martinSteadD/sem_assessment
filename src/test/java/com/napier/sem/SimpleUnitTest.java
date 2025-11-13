@@ -100,17 +100,5 @@ public class SimpleUnitTest {
         assertTrue(output.contains("United States"), "Expected output to include country name");
     }
 
-    // -------------------------------------------------------
-    // Placeholder tests for future reports (disabled for now)
-    // -------------------------------------------------------
-
-    // @Test
-    // void testOutputCityReport_NotYetImplemented() {
-    //     fail("City report output not yet implemented");
-    // }
-
-    // @Test
-    // void testOutputLanguageReport_NotYetImplemented() {
-    //     fail("Language report output not yet implemented");
-    // }
+    //future tests will be added
 }
