@@ -46,6 +46,12 @@ public class populationApp {
         ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation();
         cityReport.outputCityReport(cities, "CityPopulation.md");
 
+
+        // Run population report directly
+        ArrayList<populationReport> pops = populationReport.getAllPopulation();
+        populationReport.outputPopReport(pops,"PopulationReport.md");
+
+
         // Disconnect
         app.disconnect();
     }
@@ -102,10 +108,6 @@ public class populationApp {
     public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
 
     public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
-
-    public ArrayList<populationReport> getAllPopulation() { return new ArrayList<>(); }
-
-    public void printPopulationReport(ArrayList<populationReport> population) {}
 
     public ArrayList<populationSummary> getAllPopulationSummary() { return new ArrayList<>(); }
 

@@ -48,10 +48,15 @@ public class cityReport extends populationApp {
         try {
             Statement stmt = con.createStatement();
             String query = """
-                SELECT ci.name AS city_name, co.name AS country_name, ci.district, ci.population
+                SELECT
+                    ci.name AS city_name,
+                    co.name AS country_name,
+                    ci.district,
+                    ci.population
                 FROM city ci
-                LEFT JOIN country co ON  ci.id = co.capital
+                LEFT JOIN country co ON ci.CountryCode = co.Code
                 ORDER BY ci.population DESC;
+                
             """;
 
             ResultSet rset = stmt.executeQuery(query);
