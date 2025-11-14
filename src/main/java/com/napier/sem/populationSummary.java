@@ -89,7 +89,8 @@ public class populationSummary extends populationApp{
                         'Country' AS level
                     FROM country
                 )
-                ORDER BY level, name;
+                ORDER BY level, name
+                LIMIT 32;
             """;
 
             ResultSet rset = stmt.executeQuery(query);
@@ -127,7 +128,7 @@ public class populationSummary extends populationApp{
 
         StringBuilder sb = new StringBuilder();
         // Markdown header
-        sb.append("| Level | Name | Population |\r\n");
+        sb.append("| Level | Population | Name |\r\n");
         sb.append("| --- | --- | --- |\r\n");
 
         // Build Markdown table rows from the population summary data
