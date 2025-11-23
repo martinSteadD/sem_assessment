@@ -127,7 +127,7 @@ public class populationSummary extends populationApp{
 
         StringBuilder sb = new StringBuilder();
         // Markdown header
-        sb.append("| Level | Population | Name |\r\n");
+        sb.append("| Name | Population | Level |\r\n");
         sb.append("| --- | --- | --- |\r\n");
 
         // Build Markdown table rows from the population summary data
