@@ -1,9 +1,5 @@
 package com.napier.sem;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -39,36 +35,65 @@ public class populationApp {
         app.connect(dbLocation, 3000);
 
         // Run country report directly
-// 1. All countries in the world (limit 42)
+        // All countries in the world (limit 42)
         ArrayList<countryReport> countriesWorld = countryReport.getAllCountriesByPopulation(42);
         countryReport.outputCountryReport(countriesWorld, "CountryPopulation.md");
 
-// 2. All countries in a continent (limit 42)
+        // All countries in a continent (limit 42)
         ArrayList<countryReport> countriesContinent = countryReport.getCountriesByContinent("Asia", 42);
         countryReport.outputCountryReport(countriesContinent, "CountryPopulation_Asia.md");
 
-// 3. All countries in a region (limit 42)
+        // All countries in a region (limit 42)
         ArrayList<countryReport> countriesRegion = countryReport.getCountriesByRegion("Eastern Europe", 42);
         countryReport.outputCountryReport(countriesRegion, "CountryPopulation_EasternEurope.md");
 
-// 4. Top N populated countries in the world (limit 10)
+        // Top N populated countries in the world (limit 10)
         ArrayList<countryReport> topCountriesWorld = countryReport.getTopCountriesByPopulation(10);
         countryReport.outputCountryReport(topCountriesWorld, "TopCountriesWorld.md");
 
-// 5. Top N populated countries in a continent (limit 10)
+        // Top N populated countries in a continent (limit 10)
         ArrayList<countryReport> topCountriesContinent = countryReport.getTopCountriesByContinent("Africa", 10);
         countryReport.outputCountryReport(topCountriesContinent, "TopCountries_Africa.md");
 
-// 6. Top N populated countries in a region (limit 10)
+        // Top N populated countries in a region (limit 10)
         ArrayList<countryReport> topCountriesRegion = countryReport.getTopCountriesByRegion("South America", 10);
         countryReport.outputCountryReport(topCountriesRegion, "TopCountries_SouthAmerica.md");
 
 
-
-
         // Run city report directly
-        ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation();
+        ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation(42);
         cityReport.outputCityReport(cities, "CityPopulation.md");
+
+        ArrayList<cityReport> citiesContinent = cityReport.getCitiesByContinent("Asia", 42);
+        cityReport.outputCityReport(citiesContinent, "CitiesByContinent.md");
+
+        ArrayList<cityReport> citiesRegion = cityReport.getCitiesByRegion("Eastern Asia", 42);
+        cityReport.outputCityReport(citiesRegion, "CitiesByRegion.md");
+
+        ArrayList<cityReport> citiesCountry = cityReport.getCitiesByCountry("China", 42);
+        cityReport.outputCityReport(citiesCountry, "CitiesByCountry.md");
+
+        ArrayList<cityReport> citiesDistrict = cityReport.getCitiesByDistrict("California", 42);
+        cityReport.outputCityReport(citiesDistrict, "CitiesByDistrict.md");
+
+        // Top N reports
+        ArrayList<cityReport> topCitiesWorld = cityReport.getTopCitiesInWorld(10);
+        cityReport.outputCityReport(topCitiesWorld, "TopCitiesWorld.md");
+
+        ArrayList<cityReport> topCitiesContinent = cityReport.getTopCitiesByContinent("Europe", 10);
+        cityReport.outputCityReport(topCitiesContinent, "TopCitiesContinent.md");
+
+        ArrayList<cityReport> topCitiesRegion = cityReport.getTopCitiesByRegion("Western Europe", 10);
+        cityReport.outputCityReport(topCitiesRegion, "TopCitiesRegion.md");
+
+        ArrayList<cityReport> topCitiesCountry = cityReport.getTopCitiesByCountry("Germany", 10);
+        cityReport.outputCityReport(topCitiesCountry, "TopCitiesCountry.md");
+
+        ArrayList<cityReport> topCitiesDistrict = cityReport.getTopCitiesByDistrict("Bavaria", 10);
+        cityReport.outputCityReport(topCitiesDistrict, "TopCitiesDistrict.md");
+
+
+
 
 
         // Run population report directly
