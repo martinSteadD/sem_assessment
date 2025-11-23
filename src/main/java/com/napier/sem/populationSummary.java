@@ -98,10 +98,9 @@ public class populationSummary extends populationApp{
             // Convert SQL results into populationSummary objects
             while (rset.next()) {
                 populationSummary c = new populationSummary();
-                c.level = rset.getString("level");
                 c.name = rset.getString("name");
                 c.population = rset.getLong("population");
-
+                c.level = rset.getString("level");
                 popsums.add(c);
             }
         } catch (Exception e) {

@@ -182,11 +182,6 @@ public class populationApp {
     }
 
     // Placeholder methods for future reports
-    public ArrayList<capitalCityReport> getAllCapitalCityByPopulation() { return new ArrayList<>(); }
-
-    public void printCapitalCityReport(ArrayList<capitalCityReport> cities) {}
-
-
 
     public ArrayList<languageReport> getAllLanguageByPopulation() { return new ArrayList<>(); }
 
