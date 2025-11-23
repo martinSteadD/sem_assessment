@@ -60,7 +60,7 @@ public class populationApp {
         countryReport.outputCountryReport(topCountriesRegion, "TopCountries_SouthAmerica.md");
 
 
-        // Run city report directly
+        // City report directly
         ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation(42);
         cityReport.outputCityReport(cities, "CityPopulation.md");
 
@@ -76,7 +76,8 @@ public class populationApp {
         ArrayList<cityReport> citiesDistrict = cityReport.getCitiesByDistrict("California", 42);
         cityReport.outputCityReport(citiesDistrict, "CitiesByDistrict.md");
 
-        // Top N reports
+
+        // Top N City Reports
         ArrayList<cityReport> topCitiesWorld = cityReport.getTopCitiesInWorld(10);
         cityReport.outputCityReport(topCitiesWorld, "TopCitiesWorld.md");
 
@@ -91,6 +92,7 @@ public class populationApp {
 
         ArrayList<cityReport> topCitiesDistrict = cityReport.getTopCitiesByDistrict("Bavaria", 10);
         cityReport.outputCityReport(topCitiesDistrict, "TopCitiesDistrict.md");
+
 
         //Capital City Reports
         ArrayList<capitalCityReport> capitalsWorld = capitalCityReport.getAllCapitalCitiesByPopulation(42);
@@ -112,11 +114,15 @@ public class populationApp {
         capitalCityReport.outputCapitalCityReport(topCapitalsRegion, "TopCapitalCitiesRegion.md");
 
 
-
-
-
         // Run population report directly
+        ArrayList<populationReport> popsContinent = populationReport.getPopulationByContinent();
+        populationReport.outputPopReport(popsContinent, "PopulationByContinent.md");
 
+        ArrayList<populationReport> popsRegion = populationReport.getPopulationByRegion();
+        populationReport.outputPopReport(popsRegion, "PopulationByRegion.md");
+
+        ArrayList<populationReport> popsCountry = populationReport.getPopulationByCountry();
+        populationReport.outputPopReport(popsCountry, "PopulationByCountry.md");
 
         // Run population summary report directly
         ArrayList<populationSummary> popsums = populationSummary.getAllPopulationSummary();
