@@ -90,7 +90,6 @@ public class populationSummary extends populationApp{
                     FROM country
                 )
                 ORDER BY level, name
-                LIMIT 32;
             """;
 
             ResultSet rset = stmt.executeQuery(query);
