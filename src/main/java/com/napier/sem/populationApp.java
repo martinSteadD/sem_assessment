@@ -116,8 +116,7 @@ public class populationApp {
 
 
         // Run population report directly
-        ArrayList<populationReport> pops = populationReport.getAllPopulation();
-        populationReport.outputPopReport(pops,"PopulationReport.md");
+
 
         // Run population summary report directly
         ArrayList<populationSummary> popsums = populationSummary.getAllPopulationSummary();
