@@ -92,6 +92,25 @@ public class populationApp {
         ArrayList<cityReport> topCitiesDistrict = cityReport.getTopCitiesByDistrict("Bavaria", 10);
         cityReport.outputCityReport(topCitiesDistrict, "TopCitiesDistrict.md");
 
+        //Capital City Reports
+        ArrayList<capitalCityReport> capitalsWorld = capitalCityReport.getAllCapitalCitiesByPopulation(42);
+        capitalCityReport.outputCapitalCityReport(capitalsWorld, "CapitalCitiesWorld.md");
+
+        ArrayList<capitalCityReport> capitalsContinent = capitalCityReport.getCapitalCitiesByContinent("Asia", 42);
+        capitalCityReport.outputCapitalCityReport(capitalsContinent, "CapitalCitiesByContinent.md");
+
+        ArrayList<capitalCityReport> capitalsRegion = capitalCityReport.getCapitalCitiesByRegion("Eastern Asia", 42);
+        capitalCityReport.outputCapitalCityReport(capitalsRegion, "CapitalCitiesByRegion.md");
+
+        ArrayList<capitalCityReport> topCapitalsWorld = capitalCityReport.getTopCapitalCitiesInWorld(10);
+        capitalCityReport.outputCapitalCityReport(topCapitalsWorld, "TopCapitalCitiesWorld.md");
+
+        ArrayList<capitalCityReport> topCapitalsContinent = capitalCityReport.getTopCapitalCitiesByContinent("Europe", 10);
+        capitalCityReport.outputCapitalCityReport(topCapitalsContinent, "TopCapitalCitiesContinent.md");
+
+        ArrayList<capitalCityReport> topCapitalsRegion = capitalCityReport.getTopCapitalCitiesByRegion("Western Europe", 10);
+        capitalCityReport.outputCapitalCityReport(topCapitalsRegion, "TopCapitalCitiesRegion.md");
+
 
 
 
