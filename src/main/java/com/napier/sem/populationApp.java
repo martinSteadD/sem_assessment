@@ -128,13 +128,14 @@ public class populationApp {
         ArrayList<populationSummary> popsums = populationSummary.getAllPopulationSummary();
         populationSummary.outputPopSummary(popsums, "PopulationSummary.md");
 
+        // Run Language report directly
+        ArrayList<languageReport> langs = languageReport.getAllLanguageReport();
+        languageReport.outputLanguageReport(langs, "LanguageReport.md");
 
 
         // Disconnect
         app.disconnect();
     }
-
-
 
     /**
      * Connects to the MySQL database using JDBC.
