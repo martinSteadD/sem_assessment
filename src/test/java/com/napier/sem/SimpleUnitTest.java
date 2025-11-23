@@ -45,8 +45,9 @@ public class SimpleUnitTest {
         countryReport.outputCountryReport(new ArrayList<>(), "EmptyReport.md");
 
         String output = outContent.toString();
-        assertTrue(output.contains("No country data available."),
+        assertTrue(output.contains("No country data available, wrote placeholder file."),
                 "Expected message for empty country list");
+
     }
 
     @AfterEach

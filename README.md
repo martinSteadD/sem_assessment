@@ -16,8 +16,5 @@ Version Release:
 Master Build Status:
 ![Master Build](https://img.shields.io/github/actions/workflow/status/martinSteadD/sem_assessment/main.yml?branch=master&style=flat-square)
 
-<!-- Build status badge for the 'develop' branch -->
-Develop Build Status: 
-![Develop Build](https://img.shields.io/github/actions/workflow/status/martinSteadD/sem_assessment/main.yml?branch=develop&style=flat-square)
 
 

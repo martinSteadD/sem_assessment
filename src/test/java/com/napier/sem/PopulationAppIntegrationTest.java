@@ -26,7 +26,7 @@ public class PopulationAppIntegrationTest {
 
                 // Connect to the local Docker MySQL database
                 con = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true",
+                        "jdbc:mysql://localhost:3306/world?useSSL=false&allowPublicKeyRetrieval=true",
                         "root",
                         "example"
                 );
