@@ -126,7 +126,8 @@ public class populationApp {
 
         // Run population summary report directly
         ArrayList<populationSummary> popsums = populationSummary.getAllPopulationSummary();
-        populationSummary.outputPopSummary(popsums,"PopulationSummary.md");
+        populationSummary.outputPopSummary(popsums, "PopulationSummary.md");
+
 
 
         // Disconnect

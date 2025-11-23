@@ -33,10 +33,18 @@ public class languageReport {
      */
     public double percentage;
 
-    public ArrayList<languageReport> getLanguageReport(Connection con) {
+    /**
+     * Retrieves the language report for Chinese, English, Hindi, Spanish, and Arabic.
+     * Uses the shared connection from populationApp.
+     *
+     * @return A list of languageReport objects containing speakers and percentages.
+     */
+    public static ArrayList<languageReport> getAllLanguageReport() {
         ArrayList<languageReport> reports = new ArrayList<>();
 
         try {
+            Connection con = populationApp.con; // use the shared connection
+
             // Step 1: Get world population
             long worldPopulation = 0;
             try (PreparedStatement stmtWorld = con.prepareStatement(
@@ -81,11 +89,12 @@ public class languageReport {
         return reports;
     }
 
-
-
-
-
-
+    /**
+     * Outputs the language report to a Markdown file.
+     *
+     * @param languages List of languageReport objects.
+     * @param filename  Name of the output file.
+     */
     public static void outputLanguageReport(ArrayList<languageReport> languages, String filename) {
         if (languages == null || languages.isEmpty()) {
             try {
@@ -125,6 +134,4 @@ public class languageReport {
             e.printStackTrace();
         }
     }
-
 }
-
