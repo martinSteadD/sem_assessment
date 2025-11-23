@@ -45,7 +45,6 @@ public class populationSummary extends populationApp{
     public static ArrayList<populationSummary> getAllPopulationSummary() {
         ArrayList<populationSummary> popsums = new ArrayList<>();
 
-        // Prevent writing empty or null data
         if (con == null) {
             System.out.println("Connection not established — cannot retrieve data.");
             return popsums;
@@ -54,61 +53,76 @@ public class populationSummary extends populationApp{
         try {
             Statement stmt = con.createStatement();
 
-            // SQL query:
-            // First subquery: sum population by continent
-            // Second subquery: sum population by region
-            // Third subquery: population by individual country
-            // UNION ALL combines all levels into a single result set
-            // The result is ordered by 'level' (Continent, Region, Country) and then by name
             String query = """
-                (
-                    
-                    SELECT
-                        Continent AS name,
-                        SUM(Population) AS population,
-                        'Continent' AS level
-                    FROM country
-                    GROUP BY Continent
-                )
-                UNION ALL
-                (
-                    
-                    SELECT
-                        Region AS name,
-                        SUM(Population) AS population,
-                        'Region' AS level
-                    FROM country
-                    GROUP BY Region
-                )
-                UNION ALL
-                (
-
-                    SELECT
-                        Name AS name,
-                        Population AS population,
-                        'Country' AS level
-                    FROM country
-                )
-                ORDER BY level, name
-            """;
+            (
+                SELECT
+                    'World' AS name,
+                    SUM(Population) AS population,
+                    'World' AS level
+                FROM country
+            )
+            UNION ALL
+            (
+                SELECT
+                    Continent AS name,
+                    SUM(Population) AS population,
+                    'Continent' AS level
+                FROM country
+                GROUP BY Continent
+            )
+            UNION ALL
+            (
+                SELECT
+                    Region AS name,
+                    SUM(Population) AS population,
+                    'Region' AS level
+                FROM country
+                GROUP BY Region
+            )
+            UNION ALL
+            (
+                SELECT
+                    Name AS name,
+                    Population AS population,
+                    'Country' AS level
+                FROM country
+            )
+            UNION ALL
+            (
+                SELECT
+                    District AS name,
+                    SUM(Population) AS population,
+                    'District' AS level
+                FROM city
+                GROUP BY District
+            )
+            UNION ALL
+            (
+                SELECT
+                    Name AS name,
+                    Population AS population,
+                    'City' AS level
+                FROM city
+            )
+            ORDER BY level, name;
+        """;
 
             ResultSet rset = stmt.executeQuery(query);
 
-            // Convert SQL results into populationSummary objects
             while (rset.next()) {
-                populationSummary c = new populationSummary();
-                c.name = rset.getString("name");
-                c.population = rset.getLong("population");
-                c.level = rset.getString("level");
-                popsums.add(c);
+                populationSummary ps = new populationSummary();
+                ps.name = rset.getString("name");
+                ps.population = rset.getLong("population");
+                ps.level = rset.getString("level");
+                popsums.add(ps);
             }
         } catch (Exception e) {
-            // Print error if anything goes wrong during query execution or processing
-            System.out.println("Error retrieving population data: " + e.getMessage());
+            System.out.println("Error retrieving population summary data: " + e.getMessage());
         }
 
         return popsums;
     }
+
 
 
     /**
@@ -120,36 +134,45 @@ public class populationSummary extends populationApp{
      */
     public static void outputPopSummary(ArrayList<populationSummary> popsums, String filename) {
         if (popsums == null || popsums.isEmpty()) {
-            System.out.println("No population summary data available.");
+            try {
+                File dir = new File("./reports/populationReports/");
+                dir.mkdirs();
+                File outFile = new File(dir, filename);
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+                    writer.write("# Population Summary\n\n");
+                    writer.write("No results found for this query.\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("No population summary data available, wrote placeholder file.");
             return;
         }
 
         StringBuilder sb = new StringBuilder();
-        // Markdown header
         sb.append("| Name | Population | Level |\r\n");
         sb.append("| --- | --- | --- |\r\n");
 
-        // Build Markdown table rows from the population summary data
         for (populationSummary popsum : popsums) {
             if (popsum == null) continue;
-            sb.append("| " +
-                    popsum.name + " | " +
-                    popsum.population + " | " +
-                    popsum.level + " |\r\n");
+            sb.append("| ")
+                    .append(popsum.name).append(" | ")
+                    .append(popsum.population).append(" | ")
+                    .append(popsum.level).append(" |\r\n");
         }
 
         try {
-            // Ensure reports/ directory exists
-            new File("./reports/").mkdir();
-            // Write Markdown content to specified file
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
-            writer.write(sb.toString());
-            writer.close();
+            File dir = new File("./reports/populationReports/");
+            dir.mkdirs();
+            File outFile = new File(dir, filename);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+                writer.write(sb.toString());
+            }
         } catch (IOException e) {
-            // Print details if writing the file fails
             e.printStackTrace();
         }
     }
+
 
 }
 
