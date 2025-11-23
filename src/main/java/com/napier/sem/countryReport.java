@@ -258,9 +258,21 @@ public class countryReport extends populationApp {
      * @param filename Name of the output file to generate.
      */
     public static void outputCountryReport(ArrayList<countryReport> countries, String filename) {
-        // Prevent writing empty or null data
+        // Handle empty or null data
         if (countries == null || countries.isEmpty()) {
-            System.out.println("No country data available.");
+            try {
+                File dir = new File("./reports/countryReports/");
+                dir.mkdirs();
+
+                File outFile = new File(dir, filename);
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+                    writer.write("# Country Report\n\n");
+                    writer.write("No results found for this query.\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("No country data available, wrote placeholder file.");
             return;
         }
 
@@ -272,30 +284,29 @@ public class countryReport extends populationApp {
         // Build Markdown table rows from the country data
         for (countryReport country : countries) {
             if (country == null) continue;
-            sb.append("| " + country.code + " | " +
-                    country.name + " | " +
-                    country.continent + " | " +
-                    country.region + " | " +
-                    country.population + " | " +
-                    country.capital + " |\r\n");
+            sb.append("| ")
+                    .append(country.code).append(" | ")
+                    .append(country.name).append(" | ")
+                    .append(country.continent).append(" | ")
+                    .append(country.region).append(" | ")
+                    .append(country.population).append(" | ")
+                    .append(country.capital).append(" |\r\n");
         }
 
         try {
-            // Ensure reports/countryReports directory exists
             File dir = new File("./reports/countryReports/");
-            dir.mkdirs(); // creates both reports/ and countryReports/ if they don't exist
+            dir.mkdirs();
 
-            // Write Markdown content to specified file inside countryReports
             File outFile = new File(dir, filename);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
                 writer.write(sb.toString());
             }
         } catch (IOException e) {
-            // Print details if writing the file fails
             e.printStackTrace();
         }
-
     }
+
+
 
 
 

@@ -351,9 +351,21 @@ public class cityReport extends populationApp {
      * @param filename Name of the output file to generate.
      */
     public static void outputCityReport(ArrayList<cityReport> cities, String filename) {
-        // Prevent writing empty or null data
+        // Handle empty or null data
         if (cities == null || cities.isEmpty()) {
-            System.out.println("No city data available.");
+            try {
+                File dir = new File("./reports/cityReports/");
+                dir.mkdirs();
+
+                File outFile = new File(dir, filename);
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+                    writer.write("# City Report\n\n");
+                    writer.write("No results found for this query.\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("No city data available, wrote placeholder file.");
             return;
         }
 
@@ -365,26 +377,24 @@ public class cityReport extends populationApp {
         // Write one row per city
         for (cityReport city : cities) {
             if (city == null) continue;
-            sb.append("| " +
-                    city.name + " | " +
-                    city.country + " | " +
-                    city.district + " | " +
-                    city.population + " |\r\n");
+            sb.append("| ")
+                    .append(city.name).append(" | ")
+                    .append(city.country).append(" | ")
+                    .append(city.district).append(" | ")
+                    .append(city.population).append(" |\r\n");
         }
 
         try {
-            // Ensure reports/countryReports directory exists
             File dir = new File("./reports/cityReports/");
-            dir.mkdirs(); // creates both reports/ and cityReports/ if they don't exist
+            dir.mkdirs();
 
-            // Write Markdown content to specified file inside countryReports
             File outFile = new File(dir, filename);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
                 writer.write(sb.toString());
             }
         } catch (IOException e) {
-            // Print details if writing the file fails
             e.printStackTrace();
         }
     }
+
 }
