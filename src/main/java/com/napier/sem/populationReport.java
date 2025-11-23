@@ -25,12 +25,12 @@ public class populationReport extends populationApp {
     /**
      * The total population of the area.
      */
-    public int totalPopulation;
+    public long totalPopulation;
 
     /**
      * The population living in cities within the area.
      */
-    public int cityPopulation;
+    public long cityPopulation;
 
     /**
      * The percentage of the total population that lives in cities.
@@ -40,7 +40,7 @@ public class populationReport extends populationApp {
     /**
      * The population living outside cities (non-urban areas).
      */
-    public int nonCityPopulation;
+    public long nonCityPopulation;
 
     /**
      * The percentage of the total population that lives outside cities.
@@ -84,10 +84,10 @@ public class populationReport extends populationApp {
             while (rset.next()) {
                 populationReport p = new populationReport();
                 p.name = rset.getString("name");
-                p.totalPopulation = rset.getInt("totalPopulation");
-                p.cityPopulation = rset.getInt("cityPopulation");
+                p.totalPopulation = rset.getLong("totalPopulation");
+                p.cityPopulation = rset.getLong("cityPopulation");
                 p.cityPercentage = rset.getDouble("cityPercentage");
-                p.nonCityPopulation = rset.getInt("nonCityPopulation");
+                p.nonCityPopulation = rset.getLong("nonCityPopulation");
                 p.nonCityPercentage = rset.getDouble("nonCityPercentage");
                 pops.add(p);
             }
@@ -124,10 +124,10 @@ public class populationReport extends populationApp {
             while (rset.next()) {
                 populationReport p = new populationReport();
                 p.name = rset.getString("name");
-                p.totalPopulation = rset.getInt("totalPopulation");
-                p.cityPopulation = rset.getInt("cityPopulation");
+                p.totalPopulation = rset.getLong("totalPopulation");
+                p.cityPopulation = rset.getLong("cityPopulation");
                 p.cityPercentage = rset.getDouble("cityPercentage");
-                p.nonCityPopulation = rset.getInt("nonCityPopulation");
+                p.nonCityPopulation = rset.getLong("nonCityPopulation");
                 p.nonCityPercentage = rset.getDouble("nonCityPercentage");
                 pops.add(p);
             }
@@ -164,10 +164,10 @@ public class populationReport extends populationApp {
             while (rset.next()) {
                 populationReport p = new populationReport();
                 p.name = rset.getString("name");
-                p.totalPopulation = rset.getInt("totalPopulation");
-                p.cityPopulation = rset.getInt("cityPopulation");
+                p.totalPopulation = rset.getLong("totalPopulation");
+                p.cityPopulation = rset.getLong("cityPopulation");
                 p.cityPercentage = rset.getDouble("cityPercentage");
-                p.nonCityPopulation = rset.getInt("nonCityPopulation");
+                p.nonCityPopulation = rset.getLong("nonCityPopulation");
                 p.nonCityPercentage = rset.getDouble("nonCityPercentage");
                 pops.add(p);
             }
