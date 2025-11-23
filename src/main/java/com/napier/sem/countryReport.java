@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -53,34 +54,21 @@ public class countryReport extends populationApp {
      *
      * @return ArrayList of countryReport objects containing country details.
      */
-    public static ArrayList<countryReport> getAllCountriesByPopulation() {
+    public static ArrayList<countryReport> getAllCountriesByPopulation(int limit) {
         ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
 
-        // Ensure database connection is active before running query
-        if (con == null) {
-            System.out.println("Connection not established — cannot retrieve data.");
-            return countries;
-        }
-
-        try {
-            Statement stmt = con.createStatement();
-
-            // SQL query:
-            // Selects basic country information
-            // Joins the capital city using country.capital to city.id
-            // Includes the capital's name in the result
-            // Sorts countries by total population (largest first)
-            String query = """
-            SELECT country.code, country.name, country.continent, country.region,
-                   country.population, city.name AS capital_name
-            FROM country
-            LEFT JOIN city ON country.capital = city.id
-            ORDER BY country.population DESC;
-        """;
-
-            ResultSet rset = stmt.executeQuery(query);
-
-            // Convert SQL results into countryReport objects
+        int cappedLimit = Math.min(limit, 42);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setInt(1, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
             while (rset.next()) {
                 countryReport c = new countryReport();
                 c.code = rset.getString("code");
@@ -92,12 +80,175 @@ public class countryReport extends populationApp {
                 countries.add(c);
             }
         } catch (Exception e) {
-            // Print error if anything goes wrong during query execution or processing
-            System.out.println("Error retrieving country data: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
-
         return countries;
     }
+
+    public static ArrayList<countryReport> getCountriesByContinent(String continent, int limit) {
+        ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
+
+        int cappedLimit = Math.min(limit, 42);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        WHERE country.continent = ?
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setString(1, continent);
+            pstmt.setInt(2, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital_name");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return countries;
+    }
+
+
+    public static ArrayList<countryReport> getCountriesByRegion(String region, int limit) {
+        ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
+
+        int cappedLimit = Math.min(limit, 42);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        WHERE country.region = ?
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setString(1, region);
+            pstmt.setInt(2, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital_name");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return countries;
+    }
+
+    public static ArrayList<countryReport> getTopCountriesByPopulation(int limit) {
+        ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
+
+        int cappedLimit = Math.min(limit, 10);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setInt(1, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital_name");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return countries;
+    }
+
+    public static ArrayList<countryReport> getTopCountriesByContinent(String continent, int limit) {
+        ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
+
+        int cappedLimit = Math.min(limit, 10);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        WHERE country.continent = ?
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setString(1, continent);
+            pstmt.setInt(2, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital_name");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return countries;
+    }
+
+    public static ArrayList<countryReport> getTopCountriesByRegion(String region, int limit) {
+        ArrayList<countryReport> countries = new ArrayList<>();
+        if (con == null) return countries;
+
+        int cappedLimit = Math.min(limit, 10);
+        try (PreparedStatement pstmt = con.prepareStatement("""
+        SELECT country.code, country.name, country.continent, country.region,
+               country.population, city.name AS capital_name
+        FROM country
+        LEFT JOIN city ON country.capital = city.id
+        WHERE country.region = ?
+        ORDER BY country.population DESC
+        LIMIT ?;
+    """)) {
+            pstmt.setString(1, region);
+            pstmt.setInt(2, cappedLimit);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                countryReport c = new countryReport();
+                c.code = rset.getString("code");
+                c.name = rset.getString("name");
+                c.continent = rset.getString("continent");
+                c.region = rset.getString("region");
+                c.population = rset.getInt("population");
+                c.capital = rset.getString("capital_name");
+                countries.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return countries;
+    }
+
 
     /**
      * Outputs a list of city reports into a markdown-formatted file.
@@ -130,17 +281,23 @@ public class countryReport extends populationApp {
         }
 
         try {
-            // Ensure reports/ directory exists
-            new File("./reports/").mkdir();
-            // Write Markdown content to specified file
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
-            writer.write(sb.toString());
-            writer.close();
+            // Ensure reports/countryReports directory exists
+            File dir = new File("./reports/countryReports/");
+            dir.mkdirs(); // creates both reports/ and countryReports/ if they don't exist
+
+            // Write Markdown content to specified file inside countryReports
+            File outFile = new File(dir, filename);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+                writer.write(sb.toString());
+            }
         } catch (IOException e) {
             // Print details if writing the file fails
             e.printStackTrace();
         }
+
     }
+
+
 
 
 }

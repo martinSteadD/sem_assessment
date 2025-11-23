@@ -39,8 +39,32 @@ public class populationApp {
         app.connect(dbLocation, 3000);
 
         // Run country report directly
-        ArrayList<countryReport> countries = countryReport.getAllCountriesByPopulation();
-        countryReport.outputCountryReport(countries, "CountryPopulation.md");
+// 1. All countries in the world (limit 42)
+        ArrayList<countryReport> countriesWorld = countryReport.getAllCountriesByPopulation(42);
+        countryReport.outputCountryReport(countriesWorld, "CountryPopulation.md");
+
+// 2. All countries in a continent (limit 42)
+        ArrayList<countryReport> countriesContinent = countryReport.getCountriesByContinent("Asia", 42);
+        countryReport.outputCountryReport(countriesContinent, "CountryPopulation_Asia.md");
+
+// 3. All countries in a region (limit 42)
+        ArrayList<countryReport> countriesRegion = countryReport.getCountriesByRegion("Eastern Europe", 42);
+        countryReport.outputCountryReport(countriesRegion, "CountryPopulation_EasternEurope.md");
+
+// 4. Top N populated countries in the world (limit 10)
+        ArrayList<countryReport> topCountriesWorld = countryReport.getTopCountriesByPopulation(10);
+        countryReport.outputCountryReport(topCountriesWorld, "TopCountriesWorld.md");
+
+// 5. Top N populated countries in a continent (limit 10)
+        ArrayList<countryReport> topCountriesContinent = countryReport.getTopCountriesByContinent("Africa", 10);
+        countryReport.outputCountryReport(topCountriesContinent, "TopCountries_Africa.md");
+
+// 6. Top N populated countries in a region (limit 10)
+        ArrayList<countryReport> topCountriesRegion = countryReport.getTopCountriesByRegion("South America", 10);
+        countryReport.outputCountryReport(topCountriesRegion, "TopCountries_SouthAmerica.md");
+
+
+
 
         // Run city report directly
         ArrayList<cityReport> cities = cityReport.getAllCitiesByPopulation();
