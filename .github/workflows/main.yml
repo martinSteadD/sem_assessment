@@ -108,6 +108,10 @@ jobs:
             sleep 5
           done
 
+      # 👇 New step ensures .env exists before Compose runs
+      - name: Setup environment
+        run: cp .env.example .env
+
       - name: Run Docker Compose
         run: docker compose up --abort-on-container-exit
 
