@@ -183,9 +183,4 @@ public class populationApp {
         }
     }
 
-    // Placeholder methods for future reports
-
-    public ArrayList<languageReport> getAllLanguageByPopulation() { return new ArrayList<>(); }
-
-    public void printLanguageReport(ArrayList<languageReport> languages) {}
 }
