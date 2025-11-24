@@ -9,17 +9,19 @@ services:
     working_dir: /tmp
     volumes:
       - ./reports:/tmp/reports
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db   # override just this one inside Docker
 
   db:
     build: db/.
     ports:
       - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: world
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
-

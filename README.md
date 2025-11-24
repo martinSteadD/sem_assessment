@@ -16,5 +16,13 @@ Version Release:
 Master Build Status:
 ![Master Build](https://img.shields.io/github/actions/workflow/status/martinSteadD/sem_assessment/main.yml?branch=master&style=flat-square)
 
+## Environment Setup
+
+This project uses a `.env` file to manage environment variables.
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+
 
 
