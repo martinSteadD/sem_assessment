@@ -9,11 +9,50 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * The populationSummary class represents a simplified data model
- * for reporting the total population of a geographic area.
+ * The {@code populationSummary} class represents a simplified data model and reporting utility
+ * for aggregated population information across different geographic levels.
  * <p>
- * This class is typically used for high-level summaries where detailed
- * breakdowns (e.g., city vs non-city) are not required.
+ * Responsibilities:
+ * <ul>
+ *   <li>Acts as a container for population data retrieved from the database</li>
+ *   <li>Provides static methods to query population totals across multiple levels:
+ *       <ul>
+ *         <li>World</li>
+ *         <li>Continent</li>
+ *         <li>Region</li>
+ *         <li>Country</li>
+ *         <li>District</li>
+ *         <li>City</li>
+ *       </ul>
+ *   </li>
+ *   <li>Generates Markdown‑formatted reports from query results</li>
+ * </ul>
+ * <p>
+ * Workflow:
+ * <ol>
+ *   <li>SQL queries are executed via JDBC using {@code populationApp.con}</li>
+ *   <li>Population totals are aggregated using {@code UNION ALL} queries</li>
+ *   <li>Results are mapped into {@code populationSummary} objects</li>
+ *   <li>Collections of these objects are returned for further processing</li>
+ *   <li>Output methods format the data into Markdown tables and write them to files</li>
+ * </ol>
+ * <p>
+ * Edge‑case handling:
+ * <ul>
+ *   <li>If no database connection exists, query methods return an empty list</li>
+ *   <li>If input lists are {@code null} or empty, output methods generate placeholder files</li>
+ *   <li>If file I/O fails, the stack trace is printed and execution continues</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Retrieve population summaries across all levels
+ * ArrayList<populationSummary> summaries =
+ *     populationSummary.getAllPopulationSummary();
+ *
+ * // Output results to Markdown file
+ * populationSummary.outputPopSummary(summaries, "PopulationSummary.md");
+ * }</pre>
  */
 public class populationSummary extends populationApp{
 
@@ -34,13 +73,37 @@ public class populationSummary extends populationApp{
 
 
     /**
-     * Retrieves a high-level population summary across continents, regions, and countries.
-     * Each row indicates the total population for a geographic level:
-     * Continent
-     * Region
-     * Country
+     * Retrieves a high-level population summary across multiple geographic levels,
+     * including world, continent, region, country, district, and city totals.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if a valid database connection exists; returns an empty list if not</li>
+     *   <li>Executes a compound SQL query using {@code UNION ALL} to aggregate population data</li>
+     *   <li>Calculates totals for:
+     *       <ul>
+     *         <li>World</li>
+     *         <li>Each continent</li>
+     *         <li>Each region</li>
+     *         <li>Each country</li>
+     *         <li>Each district</li>
+     *         <li>Each city</li>
+     *       </ul>
+     *   </li>
+     *   <li>Orders results by level and name</li>
+     *   <li>Maps each result row into a {@link populationSummary} object</li>
+     *   <li>Collects and returns the results as an {@code ArrayList}</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code con} is {@code null}, an empty list is returned and a warning is logged</li>
+     *   <li>If SQL execution fails, the error message is logged and partial/empty results may be returned</li>
+     * </ul>
      *
-     * @return ArrayList of populationSummary objects containing population totals.
+     * @return an {@code ArrayList} of {@link populationSummary} objects containing
+     *         the name of the area, its population, and its level (World, Continent, Region, Country, District, City);
+     *         may be empty if no connection or query fails
      */
     public static ArrayList<populationSummary> getAllPopulationSummary() {
         ArrayList<populationSummary> popsums = new ArrayList<>();
@@ -123,14 +186,27 @@ public class populationSummary extends populationApp{
         return popsums;
     }
 
-
-
     /**
-     * Outputs a list of city reports into a markdown-formatted file.
-     * Each city appears as a row in a Markdown table.
+     * Outputs a list of population summaries into a Markdown-formatted file.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if the provided list of {@link populationSummary} objects is {@code null} or empty</li>
+     *   <li>If empty, generates a placeholder Markdown file with a "No results found" message</li>
+     *   <li>If data exists, builds a Markdown table with headers: Name, Population, Level</li>
+     *   <li>Writes one row per population summary into the table</li>
+     *   <li>Saves the file under {@code ./reports/populationReports/} with the given filename</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code popsums} is {@code null} or empty, a placeholder file is created</li>
+     *   <li>If a {@link populationSummary} entry is {@code null}, it is skipped</li>
+     *   <li>If file I/O fails, the stack trace is printed and execution continues</li>
+     * </ul>
      *
-     * @param popsums List of populationSummary objects to write.
-     * @param filename Name of the output file to generate.
+     * @param popsums  list of {@link populationSummary} objects to write; may be {@code null} or empty
+     * @param filename name of the output file to generate (e.g., {@code "PopulationSummary.md"})
      */
     public static void outputPopSummary(ArrayList<populationSummary> popsums, String filename) {
         if (popsums == null || popsums.isEmpty()) {

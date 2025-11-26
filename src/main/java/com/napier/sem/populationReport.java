@@ -9,11 +9,50 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * The populationReport class represents a data model for reporting
- * population statistics of a geographic area, including total population,
+ * The {@code populationReport} class represents a data model and reporting utility
+ * for population statistics of a geographic area, including total population,
  * city population, and non-city population breakdowns.
  * <p>
- * This class is used to structure population-related data for reporting purposes.
+ * Responsibilities:
+ * <ul>
+ *   <li>Acts as a container for population data retrieved from the database</li>
+ *   <li>Provides static methods to query population breakdowns across multiple levels:
+ *       <ul>
+ *         <li>Continent</li>
+ *         <li>Region</li>
+ *         <li>Country</li>
+ *         <li>District</li>
+ *       </ul>
+ *   </li>
+ *   <li>Generates Markdown‑formatted reports from query results</li>
+ * </ul>
+ * <p>
+ * Workflow:
+ * <ol>
+ *   <li>SQL queries are executed via JDBC using {@code populationApp.con}</li>
+ *   <li>Population totals are aggregated from {@code country} and {@code city} tables</li>
+ *   <li>City and non‑city populations are calculated, along with their percentages</li>
+ *   <li>Results are mapped into {@code populationReport} objects</li>
+ *   <li>Collections of these objects are returned for further processing</li>
+ *   <li>Output methods format the data into Markdown tables and write them to files</li>
+ * </ol>
+ * <p>
+ * Edge‑case handling:
+ * <ul>
+ *   <li>If no database connection exists, query methods return an empty list</li>
+ *   <li>If input lists are {@code null} or empty, output methods generate placeholder files</li>
+ *   <li>If file I/O fails, the stack trace is printed and execution continues</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Retrieve population breakdowns by continent
+ * ArrayList<populationReport> reports =
+ *     populationReport.getPopulationByContinent();
+ *
+ * // Output results to Markdown file
+ * populationReport.outputPopReport(reports, "PopulationByContinent.md");
+ * }</pre>
  */
 public class populationReport extends populationApp {
 
@@ -49,13 +88,36 @@ public class populationReport extends populationApp {
 
 
     /**
-     * Retrieves population statistics for all countries, including:
-     * Total population
-     * Population living in cities
-     * Population living outside cities
-     * Percentage of people in cities and non-city areas
+     * Retrieves population statistics grouped by continent, including totals and breakdowns
+     * of city versus non-city populations.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if a valid database connection exists; returns an empty list if not</li>
+     *   <li>Executes a SQL query joining {@code country} and {@code city} tables</li>
+     *   <li>Aggregates population data for each continent:
+     *       <ul>
+     *         <li>Total population</li>
+     *         <li>Population living in cities</li>
+     *         <li>Percentage of population living in cities</li>
+     *         <li>Population living outside cities</li>
+     *         <li>Percentage of population living outside cities</li>
+     *       </ul>
+     *   </li>
+     *   <li>Orders results by total population (largest first)</li>
+     *   <li>Maps each result row into a {@link populationReport} object</li>
+     *   <li>Collects and returns the results as an {@code ArrayList}</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code con} is {@code null}, an empty list is returned and a warning is logged</li>
+     *   <li>If SQL execution fails, the error message is logged and partial/empty results may be returned</li>
+     * </ul>
      *
-     * @return ArrayList of populationReport objects containing country population data.
+     * @return an {@code ArrayList} of {@link populationReport} objects containing continent name,
+     *         total population, city population and percentage, non-city population and percentage;
+     *         may be empty if no connection or query fails
      */
     public static ArrayList<populationReport> getPopulationByContinent() {
         ArrayList<populationReport> pops = new ArrayList<>();
@@ -97,6 +159,38 @@ public class populationReport extends populationApp {
         return pops;
     }
 
+    /**
+     * Retrieves population statistics grouped by region, including totals and breakdowns
+     * of city versus non-city populations.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if a valid database connection exists; returns an empty list if not</li>
+     *   <li>Executes a SQL query joining {@code country} and {@code city} tables</li>
+     *   <li>Aggregates population data for each region:
+     *       <ul>
+     *         <li>Total population</li>
+     *         <li>Population living in cities</li>
+     *         <li>Percentage of population living in cities</li>
+     *         <li>Population living outside cities</li>
+     *         <li>Percentage of population living outside cities</li>
+     *       </ul>
+     *   </li>
+     *   <li>Orders results by total population (largest first)</li>
+     *   <li>Maps each result row into a {@link populationReport} object</li>
+     *   <li>Collects and returns the results as an {@code ArrayList}</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code con} is {@code null}, an empty list is returned and a warning is logged</li>
+     *   <li>If SQL execution fails, the error message is logged and partial/empty results may be returned</li>
+     * </ul>
+     *
+     * @return an {@code ArrayList} of {@link populationReport} objects containing region name,
+     *         total population, city population and percentage, non-city population and percentage;
+     *         may be empty if no connection or query fails
+     */
     public static ArrayList<populationReport> getPopulationByRegion() {
         ArrayList<populationReport> pops = new ArrayList<>();
         if (con == null) {
@@ -137,6 +231,39 @@ public class populationReport extends populationApp {
         return pops;
     }
 
+    /**
+     * Retrieves population statistics grouped by country, including totals and breakdowns
+     * of city versus non-city populations.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if a valid database connection exists; returns an empty list if not</li>
+     *   <li>Executes a SQL query joining {@code country} and {@code city} tables</li>
+     *   <li>Aggregates population data for each country:
+     *       <ul>
+     *         <li>Total population</li>
+     *         <li>Population living in cities</li>
+     *         <li>Percentage of population living in cities</li>
+     *         <li>Population living outside cities</li>
+     *         <li>Percentage of population living outside cities</li>
+     *       </ul>
+     *   </li>
+     *   <li>Groups results by country code, name, and population</li>
+     *   <li>Orders results by total population (largest first)</li>
+     *   <li>Maps each result row into a {@link populationReport} object</li>
+     *   <li>Collects and returns the results as an {@code ArrayList}</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code con} is {@code null}, an empty list is returned and a warning is logged</li>
+     *   <li>If SQL execution fails, the error message is logged and partial/empty results may be returned</li>
+     * </ul>
+     *
+     * @return an {@code ArrayList} of {@link populationReport} objects containing country name,
+     *         total population, city population and percentage, non-city population and percentage;
+     *         may be empty if no connection or query fails
+     */
     public static ArrayList<populationReport> getPopulationByCountry() {
         ArrayList<populationReport> pops = new ArrayList<>();
         if (con == null) {
@@ -177,13 +304,36 @@ public class populationReport extends populationApp {
         return pops;
     }
 
-
     /**
-     * Outputs a list of city reports into a markdown-formatted file.
-     * Each city appears as a row in a Markdown table.
+     * Outputs a list of population reports into a Markdown-formatted file.
+     * <p>
+     * Workflow:
+     * <ul>
+     *   <li>Checks if the provided list of {@link populationReport} objects is {@code null} or empty</li>
+     *   <li>If empty, generates a placeholder Markdown file with a "No results found" message</li>
+     *   <li>If data exists, builds a Markdown table with headers:
+     *       <ul>
+     *         <li>Name</li>
+     *         <li>Total Population</li>
+     *         <li>City Population</li>
+     *         <li>City Percentage</li>
+     *         <li>Non-City Population</li>
+     *         <li>Non-City Percentage</li>
+     *       </ul>
+     *   </li>
+     *   <li>Writes one row per population report into the table</li>
+     *   <li>Saves the file under {@code ./reports/populationReports/} with the given filename</li>
+     * </ul>
+     * <p>
+     * Edge-case handling:
+     * <ul>
+     *   <li>If {@code pops} is {@code null} or empty, a placeholder file is created</li>
+     *   <li>If a {@link populationReport} entry is {@code null}, it is skipped</li>
+     *   <li>If file I/O fails, the stack trace is printed and execution continues</li>
+     * </ul>
      *
-     * @param pops List of populationReport objects to write.
-     * @param filename Name of the output file to generate.
+     * @param pops     list of {@link populationReport} objects to write; may be {@code null} or empty
+     * @param filename name of the output file to generate (e.g., {@code "PopulationReport.md"})
      */
     public static void outputPopReport(ArrayList<populationReport> pops, String filename) {
         if (pops == null || pops.isEmpty()) {
