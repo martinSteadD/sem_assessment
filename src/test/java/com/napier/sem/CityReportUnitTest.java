@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for outputCityReport.
+ * Unit tests for outputCityReport
  * These tests do noty require a  connection
  */
 public class CityReportUnitTest {

@@ -45,12 +45,20 @@ public class PopulationAppIntegrationTest {
         fail("Failed to connect to the database after " + retries + " attempts");
     }
 
+    /**
+     * Verifies if database connection object was successfully created
+     * Confirms if Docker container is running and accessible
+     */
     @Test
     void testDatabaseConnection() {
         // Ensure the database connection is not null
         assertNotNull(con, "Database connection should not be null");
     }
 
+    /**
+     * simple query against the country table
+     * Ensures that table exists and it has at least a row
+     */
     @Test
     void testCountryCount() {
         try (Statement stmt = con.createStatement()) {
@@ -65,7 +73,10 @@ public class PopulationAppIntegrationTest {
             fail("Error querying country table: " + e.getMessage());
         }
     }
-
+    /**
+     * Queries top 5 most populated cities
+     * Check that query returns one least result and population value is positive
+     */
     @Test
     void testCityPopulationQuery() {
         try (Statement stmt = con.createStatement()) {
