@@ -8,6 +8,11 @@ import java.util.ArrayList;
 /**
  * Integration tests for languageReport SQL queries.
  * Requires live connection
+ *
+ * tests:
+ * language summary SQL query
+ * sorting correctness
+ * valid numeric values
  */
 public class LanguageReportIntegrationTest {
 

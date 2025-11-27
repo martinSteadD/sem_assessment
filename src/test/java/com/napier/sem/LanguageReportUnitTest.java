@@ -9,6 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for verifying Markdown output for languageReport.
  * These do not require a live database.
+ *
+ * Tests:
+ * Markdown output creation
+ * File existence
+ * File structure validation
+ * Empty dataset behaviour
  */
 public class LanguageReportUnitTest {
 
