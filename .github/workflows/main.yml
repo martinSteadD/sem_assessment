@@ -107,10 +107,6 @@ jobs:
   Build:
     name: Build and Deploy
     runs-on: ubuntu-22.04
-    env:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: example
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -126,12 +122,21 @@ jobs:
       - name: Package the App (skip tests)
         run: mvn --batch-mode package -DskipTests=true
 
+      - name: Wait for DB to be Ready
+        run: |
+          echo "Waiting for DB to be ready..."
+          for i in {1..10}; do
+            nc -z localhost 33060 && echo "DB is up" && break
+            echo "DB not ready yet..."
+            sleep 5
+          done
+
+      # 👇 New step ensures .env exists before Compose runs
       - name: Setup environment
         run: cp .env.example .env
 
-      # ✅ Let Docker Compose handle app + db together
       - name: Run Docker Compose
-        run: docker compose --env-file .env up --abort-on-container-exit
+        run: docker compose up --abort-on-container-exit
 
       - name: Create GitHub Release
         uses: marvinpinto/action-automatic-releases@latest
@@ -141,3 +146,4 @@ jobs:
           automatic_release_tag: "latest"
           files: |
             target/*.jar
+
