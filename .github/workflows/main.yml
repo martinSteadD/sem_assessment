@@ -62,7 +62,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      # ✅ Build DB image with correct name
       - name: Build DB image
         run: docker build -t sem_assessment-db ./db
 
@@ -108,7 +107,6 @@ jobs:
   Build:
     name: Build and Deploy
     runs-on: ubuntu-22.04
-    needs: IntegrationTests   # ✅ Build waits for IntegrationTests
     env:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
       SPRING_DATASOURCE_USERNAME: root
@@ -128,29 +126,10 @@ jobs:
       - name: Package the App (skip tests)
         run: mvn --batch-mode package -DskipTests=true
 
-      # ✅ Build DB image with correct name
-      - name: Build DB image
-        run: docker build -t sem_assessment-db ./db
-
-      - name: Start DB container
-        run: docker run --rm --name db -dp 3306:3306 --env-file .env sem_assessment-db:latest
-
-      - name: Wait for DB to be ready
-        run: |
-          for i in {1..30}; do
-            COUNTRY_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM country;" || echo 0)
-            LANG_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM countrylanguage;" || echo 0)
-            if [ "$COUNTRY_COUNT" -gt 0 ] && [ "$LANG_COUNT" -gt 0 ]; then
-              echo "DB is seeded and ready!"
-              break
-            fi
-            echo "Waiting for DB to finish seeding... (country=$COUNTRY_COUNT, language=$LANG_COUNT)"
-            sleep 5
-          done
-
       - name: Setup environment
         run: cp .env.example .env
 
+      # ✅ Let Docker Compose handle app + db together
       - name: Run Docker Compose
         run: docker compose --env-file .env up --abort-on-container-exit
 
