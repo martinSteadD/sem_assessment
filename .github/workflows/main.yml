@@ -126,7 +126,7 @@ jobs:
         run: |
           echo "Waiting for DB to be ready..."
           for i in {1..10}; do
-            nc -z localhost 33060 && echo "DB is up" && break
+            nc -z localhost 3306 && echo "DB is up" && break
             echo "DB not ready yet..."
             sleep 5
           done
