@@ -21,8 +21,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      # Check that the world dataset is actually loaded, not just that MySQL is alive
-      test: ["CMD-SHELL", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e 'SELECT COUNT(*) FROM world.country;' || exit 1"]
+      test: [ "CMD-SHELL", "mysql -h localhost -uroot -p$MYSQL_ROOT_PASSWORD -e 'SELECT COUNT(*) FROM world.country;' || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 20
