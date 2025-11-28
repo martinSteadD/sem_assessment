@@ -90,6 +90,3 @@ hs_err_pid*
 /reports/CityPopulation.md
 /reports/CountryPopulation.md
 /reports/PopulationReport.md
-
-# environment configuration
-.env
