@@ -82,7 +82,7 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          mvn --batch-mode -Dtest=com.napier.sem.PopulationAppIntegrationTest test -Dsurefire.printSummary=true || echo "Integration tests exited with non-zero status"
+          mvn --batch-mode -Dtest=*IntegrationTest test -Dsurefire.printSummary=true || echo "Integration tests exited with non-zero status"
 
       - name: Stop and clean DB
         run: |
@@ -150,3 +150,4 @@ jobs:
           files: |
             target/*.jar
 
+ 
