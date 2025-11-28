@@ -66,17 +66,19 @@ jobs:
         run: docker build -t database ./db
 
       - name: Start DB container
-        run: docker run --name db -dp 3306:3306 -e MYSQL_ROOT_PASSWORD=example -e MYSQL_DATABASE=world database
+        run: docker run --rm --name db -dp 3306:3306 -e MYSQL_ROOT_PASSWORD=example -e MYSQL_DATABASE=world database
 
       - name: Wait for DB to be seeded
         run: |
           echo "Waiting for DB to be seeded..."
           for i in {1..30}; do
-            if docker exec db mysql -h localhost -uroot -pexample -e "SELECT COUNT(*) FROM world.country;" > /dev/null 2>&1; then
+            COUNTRY_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM country;" || echo 0)
+            LANG_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM countrylanguage;" || echo 0)
+            if [ "$COUNTRY_COUNT" -gt 0 ] && [ "$LANG_COUNT" -gt 0 ]; then
               echo "DB is seeded and ready!"
               break
             fi
-            echo "$i\tDB not ready yet..."
+            echo "$i\tDB not ready yet... (country=$COUNTRY_COUNT, language=$LANG_COUNT)"
             sleep 5
           done
 
@@ -86,9 +88,9 @@ jobs:
 
       - name: Stop and clean DB
         run: |
-          docker stop db
-          docker rm db
-          docker image rm database
+          docker stop db || true
+          docker rm db || true
+          docker image rm database || true
 
       - name: Show Integration Test Report
         run: |
@@ -127,11 +129,13 @@ jobs:
       - name: Wait for DB to be ready
         run: |
           for i in {1..30}; do
-            if docker exec db mysql -h localhost -uroot -pexample -e "SELECT COUNT(*) FROM world.country;" > /dev/null 2>&1; then
+            COUNTRY_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM country;" || echo 0)
+            LANG_COUNT=$(docker exec db mysql -h localhost -uroot -pexample world -N -e "SELECT COUNT(*) FROM countrylanguage;" || echo 0)
+            if [ "$COUNTRY_COUNT" -gt 0 ] && [ "$LANG_COUNT" -gt 0 ]; then
               echo "DB is seeded and ready!"
               break
             fi
-            echo "Waiting for DB to finish seeding..."
+            echo "Waiting for DB to finish seeding... (country=$COUNTRY_COUNT, language=$LANG_COUNT)"
             sleep 5
           done
 
@@ -150,4 +154,3 @@ jobs:
           files: |
             target/*.jar
 
- 
