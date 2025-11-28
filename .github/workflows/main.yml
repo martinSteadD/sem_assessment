@@ -53,7 +53,7 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-22.04
     env:
-      SPRING_DATASOURCE_URL: jdbc:mysql://${{ env.DB_HOST }}:3306/world
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: example
     steps:
@@ -112,7 +112,7 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-22.04
     env:
-      SPRING_DATASOURCE_URL: jdbc:mysql://${{ env.DB_HOST }}:3306/world
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: example
     steps:
@@ -155,3 +155,4 @@ jobs:
           automatic_release_tag: "latest"
           files: |
             target/*.jar
+
