@@ -58,13 +58,30 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Run Integration Tests with Docker
+      - name: Build DB image
+        run: docker build -t database ./db
+
+      - name: Start DB container
+        run: docker run --name db -dp 33060:3306 database
+
+      - name: Wait for DB to be ready
         run: |
-          docker build -t database ./db
-          docker run --name db -dp 33060:3306 database
-          echo "Waiting for DB to initialize..."
-          sleep 10
+          echo "Waiting for DB to be ready..."
+          for i in {1..30}; do
+            if docker exec db mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" > /dev/null 2>&1; then
+              echo "Database is ready!"
+              break
+            fi
+            echo "DB not ready yet..."
+            sleep 5
+          done
+
+      - name: Run Integration Tests
+        run: |
           mvn --batch-mode -Dtest=com.napier.sem.PopulationAppIntegrationTest test -Dsurefire.printSummary=true || echo "Integration tests exited with non-zero status"
+
+      - name: Stop and clean DB
+        run: |
           docker stop db
           docker rm db
           docker image rm database
@@ -108,7 +125,6 @@ jobs:
             sleep 5
           done
 
-      # 👇 New step ensures .env exists before Compose runs
       - name: Setup environment
         run: cp .env.example .env
 
