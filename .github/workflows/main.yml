@@ -64,17 +64,18 @@ jobs:
       - name: Start DB container
         run: docker run --name db -dp 33060:3306 database
 
-      - name: Wait for DB to be ready
+      - name: Wait for DB to be seeded
         run: |
-          echo "Waiting for DB to be ready..."
+          echo "Waiting for DB to be seeded..."
           for i in {1..30}; do
-            if docker exec db mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1;" > /dev/null 2>&1; then
-              echo "Database is ready!"
+            if docker exec db mysql -h localhost -uroot -pexample -e "SELECT COUNT(*) FROM world.country;" > /dev/null 2>&1; then
+              echo "DB is seeded and ready!"
               break
             fi
-            echo "DB not ready yet..."
+            echo "$i\tDB not ready yet..."
             sleep 5
           done
+      
 
       - name: Run Integration Tests
         run: |
