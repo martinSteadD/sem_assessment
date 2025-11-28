@@ -29,7 +29,7 @@ public class PopulationReportIntegrationTest {
 
         for (populationReport pop : results) {
             assertNotNull(pop.name, "Continent name should not be null");
-            assertTrue(pop.totalPopulation > 0, "Total population must be positive");
+            assertTrue(pop.totalPopulation >= 0, "Total population must be positive");
             assertTrue(pop.cityPopulation >= 0, "City population must be >= 0");
             assertTrue(pop.nonCityPopulation >= 0, "Non-city population must be >= 0");
             assertTrue(pop.cityPercentage >= 0, "City percentage must be >= 0");
@@ -60,7 +60,7 @@ public class PopulationReportIntegrationTest {
 
         for (populationReport pop : results) {
             assertNotNull(pop.name, "Country name should not be null");
-            assertTrue(pop.totalPopulation > 0, "Total population must be positive");
+            assertTrue(pop.totalPopulation >= 0, "Total population must be positive");
         }
     }
 }

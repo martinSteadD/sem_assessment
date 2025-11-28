@@ -21,10 +21,9 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root --password=$MYSQL_ROOT_PASSWORD || exit 1" ]
-      interval: 5s
+      # Check that the world dataset is actually loaded, not just that MySQL is alive
+      test: ["CMD-SHELL", "mysql -uroot -p$MYSQL_ROOT_PASSWORD -e 'SELECT COUNT(*) FROM world.country;' || exit 1"]
+      interval: 10s
       timeout: 5s
       retries: 20
       start_period: 30s
-
-
