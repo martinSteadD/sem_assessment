@@ -62,11 +62,12 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      # ✅ Build DB image with correct name
       - name: Build DB image
-        run: docker build -t database ./db
+        run: docker build -t sem_assessment-db ./db
 
       - name: Start DB container
-        run: docker run --rm --name db -dp 3306:3306 -e MYSQL_ROOT_PASSWORD=example -e MYSQL_DATABASE=world database
+        run: docker run --rm --name db -dp 3306:3306 --env-file .env sem_assessment-db:latest
 
       - name: Wait for DB to be seeded
         run: |
@@ -90,7 +91,7 @@ jobs:
         run: |
           docker stop db || true
           docker rm db || true
-          docker image rm database || true
+          docker image rm sem_assessment-db || true
 
       - name: Show Integration Test Report
         run: |
@@ -107,6 +108,7 @@ jobs:
   Build:
     name: Build and Deploy
     runs-on: ubuntu-22.04
+    needs: IntegrationTests   # ✅ Build waits for IntegrationTests
     env:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/world
       SPRING_DATASOURCE_USERNAME: root
@@ -126,9 +128,12 @@ jobs:
       - name: Package the App (skip tests)
         run: mvn --batch-mode package -DskipTests=true
 
-      # ✅ Start DB container so the wait loop has something to exec into
+      # ✅ Build DB image with correct name
+      - name: Build DB image
+        run: docker build -t sem_assessment-db ./db
+
       - name: Start DB container
-        run: docker run --rm --name db -dp 3306:3306 --env-file .env database
+        run: docker run --rm --name db -dp 3306:3306 --env-file .env sem_assessment-db:latest
 
       - name: Wait for DB to be ready
         run: |
