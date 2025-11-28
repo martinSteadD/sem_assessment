@@ -24,6 +24,12 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Load environment variables
+        run: |
+          if [ -f .env ]; then
+            export $(cat .env | xargs)
+          fi
+
       - name: Run Unit Tests (non-blocking)
         run: |
           mvn --batch-mode -Dtest=*UnitTest test -Dsurefire.printSummary=true || echo "Unit tests exited with non-zero status"
@@ -46,6 +52,10 @@ jobs:
   IntegrationTests:
     name: Integration Tests
     runs-on: ubuntu-22.04
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${{ env.DB_HOST }}:3306/world
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: example
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,7 +72,7 @@ jobs:
         run: docker build -t database ./db
 
       - name: Start DB container
-        run: docker run --name db -dp 33060:3306 database
+        run: docker run --name db -dp 3306:3306 -e MYSQL_ROOT_PASSWORD=example -e MYSQL_DATABASE=world database
 
       - name: Wait for DB to be seeded
         run: |
@@ -75,7 +85,6 @@ jobs:
             echo "$i\tDB not ready yet..."
             sleep 5
           done
-      
 
       - name: Run Integration Tests
         run: |
@@ -102,6 +111,10 @@ jobs:
   Build:
     name: Build and Deploy
     runs-on: ubuntu-22.04
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${{ env.DB_HOST }}:3306/world
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: example
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -127,7 +140,6 @@ jobs:
             echo "Waiting for DB to finish seeding..."
             sleep 5
           done
-      
 
       - name: Setup environment
         run: cp .env.example .env
