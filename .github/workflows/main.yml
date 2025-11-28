@@ -122,6 +122,10 @@ jobs:
       - name: Package the App (skip tests)
         run: mvn --batch-mode package -DskipTests=true
 
+      # ✅ Confirm .env is present and correct
+      - name: Show .env contents
+        run: cat .env
+
       - name: Wait for DB to be Ready
         run: |
           echo "Waiting for DB to be ready..."
@@ -131,12 +135,9 @@ jobs:
             sleep 5
           done
 
-      # 👇 New step ensures .env exists before Compose runs
-      - name: Setup environment
-        run: cp .env.example .env
-
+      # ✅ Use committed .env file directly
       - name: Run Docker Compose
-        run: docker compose up --abort-on-container-exit
+        run: docker compose --env-file .env up --abort-on-container-exit
 
       - name: Create GitHub Release
         uses: marvinpinto/action-automatic-releases@latest
@@ -146,4 +147,3 @@ jobs:
           automatic_release_tag: "latest"
           files: |
             target/*.jar
-
